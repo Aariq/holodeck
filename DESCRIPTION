@@ -11,5 +11,8 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Imports: 
-    mvtnorm,
-    dplyr
+    dplyr,
+    tibble,
+    MASS,
+    purrr
+RoxygenNote: 6.1.1
