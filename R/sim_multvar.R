@@ -1,5 +1,8 @@
 #' Simulate a dataset with a given number of observations and groups.
 #'
+#' To-do: make this optionally accpet a dataframe and add categorical variables
+#' Make this optionally create multiple categorical variables as being nested or crossed or random
+#'
 #' @description This is a simple wrapper that creates a tibble of length `N` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
 #' @param N Total number of observations/rows
 #' @param n_groups How many groups or treatments to simulate
@@ -12,8 +15,8 @@
 #' @export
 #'
 #' @examples
-#' df <- sim_df(30, 3)
-sim_df <- function(N, n_groups) {
+#' df <- sim_cat(30, 3)
+sim_cat <- function(N, n_groups) {
   #stopifnots for group size.  Groups should have at least 3 obserations, warn if less than 5.
   if(N/n_groups < 3){
     stop("Not enough replicates per group")
@@ -21,12 +24,15 @@ sim_df <- function(N, n_groups) {
   if(N/n_groups < 5){
     warning("Fewer than 5 replicates per group")
   }
-  df <- tibble(group = rep(letters[1:n_groups], length.out = N)) %>% arrange(group)
+  df <-
+    tibble(group = rep(letters[1:n_groups], length.out = N)) %>%
+    arrange(group)
+
   return(df)
 }
 
 
-
+# pipe-able wrapper to diag()
 set_diag <- function(x, value){
   diag(x) <- value
   return(x)
@@ -36,12 +42,12 @@ set_diag <- function(x, value){
 
 #' Simulate co-varying variables
 #'
-#' @param df a dataframe or tibble
+#' @param df a data frame or tibble
 #' @param p number of variables to simulate
 #' @param var variance used to construct variance-covarinace matrix.
 #' @param cov covariance used to construct variance-covarinace matrix.
 #' @param name an optional name to be appended to the column names in the output
-#' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.
+#' @param seed an optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
 #' @return a tibble
 #'
@@ -52,8 +58,8 @@ set_diag <- function(x, value){
 #' @export
 #'
 #' @examples
-#' df <- sim_df(30, 3)
-#' sim_covar(df, p = 5, var = 1, cov = 0.5, name = "correlated")
+#' sim_cat(30, 3) %>%
+#' sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
 
 sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
   stopifnot(is.data.frame(df))
@@ -102,7 +108,7 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
 #' @export
 #'
 #' @examples
-#' df <- sim_df(30, 3)
+#' df <- sim_cat(30, 3)
 #' sim_discr(df, p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, seed = NA){
   if(is.na(seed)){
@@ -174,7 +180,7 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
 #'
 #' @examples
 #' library(dplyr)
-#' df <- sim_df(10, 2) %>%
+#' df <- sim_cat(10, 2) %>%
 #' sim_covar(10, 1, 0.5) %>%
 #' sim_missing(0.05)
 sim_missing <-
