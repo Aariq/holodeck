@@ -26,6 +26,6 @@ a tibble
 Simulate co-varying variables
 }
 \examples{
-sim_cat(30, 3) \%>\%
-sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
+df <- sim_cat(30, 3)
+sim_covar(df, p = 5, var = 1, cov = 0.5, name = "correlated")
 }

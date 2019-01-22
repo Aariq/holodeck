@@ -4,12 +4,14 @@
 \alias{sim_cat}
 \title{Simulate a dataset with a given number of observations and groups.}
 \usage{
-sim_cat(N, n_groups)
+sim_cat(N, n_groups, name = "group")
 }
 \arguments{
 \item{N}{Total number of observations/rows}
 
 \item{n_groups}{How many groups or treatments to simulate}
+
+\item{name}{The column name for the grouping variable.  Defaults to "group".}
 }
 \value{
 a tibble

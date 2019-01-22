@@ -6,6 +6,7 @@
 #' @description This is a simple wrapper that creates a tibble of length `N` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
 #' @param N Total number of observations/rows
 #' @param n_groups How many groups or treatments to simulate
+#' @param name The column name for the grouping variable.  Defaults to "group".
 #'
 #' @return a tibble
 #'
@@ -16,7 +17,8 @@
 #'
 #' @examples
 #' df <- sim_cat(30, 3)
-sim_cat <- function(N, n_groups) {
+sim_cat <- function(N, n_groups, name = "group") {
+  name <- sym(name)
   #stopifnots for group size.  Groups should have at least 3 obserations, warn if less than 5.
   if(N/n_groups < 3){
     stop("Not enough replicates per group")
@@ -25,8 +27,8 @@ sim_cat <- function(N, n_groups) {
     warning("Fewer than 5 replicates per group")
   }
   df <-
-    tibble(group = rep(letters[1:n_groups], length.out = N)) %>%
-    arrange(group)
+    tibble(!!name := rep(letters[1:n_groups], length.out = N)) %>%
+    arrange(!!name)
 
   return(df)
 }
@@ -58,8 +60,8 @@ set_diag <- function(x, value){
 #' @export
 #'
 #' @examples
-#' sim_cat(30, 3) %>%
-#' sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
+#' df <- sim_cat(30, 3)
+#' sim_covar(df, p = 5, var = 1, cov = 0.5, name = "correlated")
 
 sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
   stopifnot(is.data.frame(df))
@@ -170,6 +172,7 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
 #'
 #' @param df a dataframe
 #' @param prop proportion of values to be set to NA
+#' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.
 #'
 #' @return a dataframe with NAs
 #'
