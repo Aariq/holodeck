@@ -12,7 +12,7 @@
 #'
 #' @import tibble
 #' @import dplyr
-#'
+#' @importFrom rlang :=
 #' @export
 #'
 #' @examples
@@ -123,10 +123,11 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
   df <- arrange(df, !!group_var)
 
   #number of observations in each group
-  len_groups <- df %>%
+  len_groups <-
+    df %>%
     group_by(!!group_var) %>%
     summarise(lens = n()) %>%
-    .$lens
+    purrr::pluck("lens")
 
   if(length(group_means) != n_groups){
     stop(paste("Please supply means for all", n_groups, "groups."))

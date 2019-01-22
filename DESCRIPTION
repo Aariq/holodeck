@@ -14,7 +14,8 @@ Imports:
     dplyr,
     tibble,
     MASS,
-    purrr
+    purrr,
+    rlang
 RoxygenNote: 6.1.1
 URL: https://github.com/Aariq/tidymvsim
 BugReports: https://github.com/Aariq/tidymvsim/issues
