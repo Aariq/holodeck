@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_multvar.R
 \name{sim_discr}
 \alias{sim_discr}
-\title{Simulate co-varying variables with different means by group.}
+\title{Simulate co-varying variables with different means by group}
 \usage{
 sim_discr(df, p, var, cov, group_means, group = "group", name = NA,
   seed = NA)

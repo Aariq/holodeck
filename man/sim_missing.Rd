@@ -17,7 +17,7 @@ sim_missing(df, prop, seed = NA)
 a dataframe with NAs
 }
 \description{
-Simulate missing values
+Takes a data frame and randomly replaces a user-supplied proportion of values with `NA`.
 }
 \examples{
 library(dplyr)

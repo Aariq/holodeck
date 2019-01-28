@@ -2,7 +2,7 @@
 % Please edit documentation in R/sim_multvar.R
 \name{sim_cat}
 \alias{sim_cat}
-\title{Simulate a dataset with a given number of observations and groups.}
+\title{Simulate a dataset with a given number of observations and groups}
 \usage{
 sim_cat(N, n_groups, name = "group")
 }

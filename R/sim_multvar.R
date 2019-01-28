@@ -1,4 +1,4 @@
-#' Simulate a dataset with a given number of observations and groups.
+#' Simulate a dataset with a given number of observations and groups
 #'
 #' To-do: make this optionally accpet a dataframe and add categorical variables
 #' Make this optionally create multiple categorical variables as being nested or crossed or random
@@ -35,8 +35,9 @@ sim_cat <- function(N, n_groups, name = "group") {
 
 
 
-
 #' Simulate co-varying variables
+#'
+#' Description
 #'
 #' @param df a data frame or tibble
 #' @param p number of variables to simulate
@@ -81,7 +82,7 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
 
 
 
-#' Simulate co-varying variables with different means by group.
+#' Simulate co-varying variables with different means by group
 #'
 #' To-do: make this work with `dplyr::group_by()` instead of `group =`
 #'
@@ -165,6 +166,7 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
 
 #' Simulate missing values
 #'
+#' Takes a data frame and randomly replaces a user-supplied proportion of values with `NA`.
 #' @param df a dataframe
 #' @param prop proportion of values to be set to NA
 #' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.

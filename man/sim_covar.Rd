@@ -23,7 +23,7 @@ sim_covar(df, p, var, cov, name = NA, seed = NA)
 a tibble
 }
 \description{
-Simulate co-varying variables
+Description
 }
 \examples{
 df <- sim_cat(30, 3)

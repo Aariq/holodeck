@@ -6,7 +6,8 @@ Authors@R:
            family = "Scott",
            role = c("aut", "cre"),
            email = "scottericr@gmail.com")
-Description: Provides pipeable (` %>% `) wrappers for `MASS:mvnorm()` that allow addition of groups of covarying variables to data frames or tibbles. 
+Description: Provides pipeable (` %>% `) wrappers for `MASS:mvnorm()` that allow addition of groups
+    of covarying variables to data frames or tibbles. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
