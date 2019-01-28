@@ -34,12 +34,6 @@ sim_cat <- function(N, n_groups, name = "group") {
 }
 
 
-# pipe-able wrapper to diag()
-set_diag <- function(x, value){
-  diag(x) <- value
-  return(x)
-}
-
 
 
 #' Simulate co-varying variables
