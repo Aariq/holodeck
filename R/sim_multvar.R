@@ -37,9 +37,9 @@ sim_cat <- function(N, n_groups, name = "group") {
 
 #' Simulate co-varying variables
 #'
-#' Description
+#' Adds a group of variables (columns) with a given variance and covariance to a data frame or tibble
 #'
-#' @param df a data frame or tibble
+#' @param .data a data frame or tibble
 #' @param p number of variables to simulate
 #' @param var variance used to construct variance-covarinace matrix.
 #' @param cov covariance used to construct variance-covarinace matrix.
@@ -55,18 +55,19 @@ sim_cat <- function(N, n_groups, name = "group") {
 #' @export
 #'
 #' @examples
-#' df <- sim_cat(30, 3)
-#' sim_covar(df, p = 5, var = 1, cov = 0.5, name = "correlated")
+#' library(dplyr)
+#' sim_cat(30, 3) %>%
+#' sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
 
-sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
-  stopifnot(is.data.frame(df))
+sim_covar <- function(.data, p, var, cov, name = NA, seed = NA) {
+  stopifnot(is.data.frame(.data))
   if(length(cov) != 1){
     stop("Error: length(cov) not equal to 1")
   }
   if(is.na(seed)){
     seed = as.integer(runif(1) * 10e6)
   }
-  N <- nrow(df)
+  N <- nrow(.data)
   S <- matrix(rep(cov, p^2), ncol = p) %>% set_diag(var)
 
   set.seed(seed)
@@ -76,7 +77,7 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
   if(!is.na(name)){
     colnames(sim_data) <- paste0(name, "_", 1:p)
   }
-  new_df <- bind_cols(df, sim_data)
+  new_df <- bind_cols(.data, sim_data)
   return(new_df)
 }
 
@@ -86,7 +87,7 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
 #'
 #' To-do: make this work with `dplyr::group_by()` instead of `group =`
 #'
-#' @param df a dataframe containing a grouping variable column
+#' @param .data a dataframe containing a grouping variable column
 #' @param p number of variables to simulate
 #' @param var variance used to construct variance-covarinace matrix.
 #' @param cov covariance used to construct variance-covarinace matrix.
@@ -105,21 +106,22 @@ sim_covar <- function(df, p, var, cov, name = NA, seed = NA) {
 #' @export
 #'
 #' @examples
-#' df <- sim_cat(30, 3)
-#' sim_discr(df, p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
-sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, seed = NA){
+#' library(dplyr)
+#' sim_cat(30, 3) %>%
+#' sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
+sim_discr <- function(.data, p, var, cov, group_means, group = "group", name = NA, seed = NA){
   if(is.na(seed)){
     seed = as.integer(runif(1) * 10e6)
   }
-  N <- nrow(df)
+  N <- nrow(.data)
   group_var <- sym(group)
-  n_groups <- select(df, !!group_var) %>% unique() %>% nrow()
+  n_groups <- select(.data, !!group_var) %>% unique() %>% nrow()
   #arrange by grouping variable for easier merging later
-  df <- arrange(df, !!group_var)
+  .data <- arrange(.data, !!group_var)
 
   #number of observations in each group
   len_groups <-
-    df %>%
+    .data %>%
     group_by(!!group_var) %>%
     summarise(lens = n()) %>%
     purrr::pluck("lens")
@@ -141,25 +143,27 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
   }
 
   #list of vcov matrices for each group
-  S.list <- purrr::map2(Cov, Var,
-                        ~matrix(rep(.x, p^2), ncol = p) %>%
-                          set_diag(.y))
+  S.list <-
+    purrr::map2(Cov, Var,
+                ~matrix(rep(.x, p^2), ncol = p) %>%
+                  set_diag(.y))
   #list of all params for pmap_df()
   l <- list(S = S.list, n = len_groups, mu = group_means)
 
   set.seed(seed)
   #for each group, use that groups vcov matrix, sample size, and group mean in mvrnorm
-  sim_data <- pmap_df(l, .f = function(S, n, mu){
-    MASS::mvrnorm(n = n,
-                  Sigma = S,
-                  mu = rep(mu, p)) %>%
-      as.data.frame
-  })
+  sim_data <-
+    pmap_df(l, .f = function(S, n, mu){
+      MASS::mvrnorm(n = n,
+                    Sigma = S,
+                    mu = rep(mu, p)) %>%
+        as.data.frame
+    })
 
   if(!is.na(name)){
     colnames(sim_data) <- paste0(name, "_", 1:p)
   }
-  new_df <- bind_cols(df, sim_data)
+  new_df <- bind_cols(.data, sim_data)
   return(new_df)
 }
 
@@ -167,7 +171,7 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
 #' Simulate missing values
 #'
 #' Takes a data frame and randomly replaces a user-supplied proportion of values with `NA`.
-#' @param df a dataframe
+#' @param .data a dataframe
 #' @param prop proportion of values to be set to NA
 #' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.
 #'
@@ -184,11 +188,11 @@ sim_discr <- function(df, p, var, cov, group_means, group = "group", name = NA, 
 #' sim_covar(10, 1, 0.5) %>%
 #' sim_missing(0.05)
 sim_missing <-
-  function(df, prop, seed = NA){ #consider adding vars= to specify what columns.  Pass to select()
+  function(.data, prop, seed = NA){ #consider adding vars= to specify what columns.  Pass to select()
     if(is.na(seed)){
       seed = as.integer(runif(1) * 10e6)
     }
-    datadim <- df %>%
+    datadim <- .data %>%
       select_if(is.double) %>%
       dim()
 
@@ -203,7 +207,8 @@ sim_missing <-
     na.vector <- sample(c(rep(NA, na.num), rep(0, size - na.num)), size)
 
     mask <- matrix(na.vector, nrow = datadim[1], ncol = datadim[2])
-    newdata <- df %>% select_if(is.double) + mask
-    newdf <- bind_cols(select_if(df, ~!is.double(.)), newdata)
+    newdata <- .data %>%
+      select_if(is.double) + mask
+    newdf <- bind_cols(select_if(.data, ~!is.double(.)), newdata)
     return(newdf)
   }
