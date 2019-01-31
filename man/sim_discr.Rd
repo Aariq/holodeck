@@ -4,11 +4,11 @@
 \alias{sim_discr}
 \title{Simulate co-varying variables with different means by group}
 \usage{
-sim_discr(df, p, var, cov, group_means, group = "group", name = NA,
+sim_discr(.data, p, var, cov, group_means, group = "group", name = NA,
   seed = NA)
 }
 \arguments{
-\item{df}{a dataframe containing a grouping variable column}
+\item{.data}{a dataframe containing a grouping variable column}
 
 \item{p}{number of variables to simulate}
 
@@ -31,6 +31,7 @@ a tibble
 To-do: make this work with `dplyr::group_by()` instead of `group =`
 }
 \examples{
-df <- sim_cat(30, 3)
-sim_discr(df, p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
+library(dplyr)
+sim_cat(N = 30, n_groups = 3) \%>\%
+sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 }
