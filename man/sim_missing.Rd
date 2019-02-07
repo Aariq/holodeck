@@ -4,14 +4,14 @@
 \alias{sim_missing}
 \title{Simulate missing values}
 \usage{
-sim_missing(df, prop, seed = NA)
+sim_missing(.data, prop, seed = NA)
 }
 \arguments{
-\item{df}{a dataframe}
+\item{.data}{A dataframe.}
 
-\item{prop}{proportion of values to be set to NA}
+\item{prop}{Proportion of values to be set to `NA`.}
 
-\item{seed}{an optional seed for random number generation.  If `NA` a random seed will be used.}
+\item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
 }
 \value{
 a dataframe with NAs
@@ -21,7 +21,7 @@ Takes a data frame and randomly replaces a user-supplied proportion of values wi
 }
 \examples{
 library(dplyr)
-df <- sim_cat(10, 2) \%>\%
-sim_covar(10, 1, 0.5) \%>\%
+df <- sim_cat(N = 10, n_groups = 2) \%>\%
+sim_covar(p = 10, var = 1, cov = 0.5) \%>\%
 sim_missing(0.05)
 }

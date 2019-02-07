@@ -4,25 +4,25 @@
 \alias{sim_discr}
 \title{Simulate co-varying variables with different means by group}
 \usage{
-sim_discr(df, p, var, cov, group_means, group = "group", name = NA,
+sim_discr(.data, p, var, cov, group_means, group = "group", name = NA,
   seed = NA)
 }
 \arguments{
-\item{df}{a dataframe containing a grouping variable column}
+\item{.data}{A dataframe containing a grouping variable column.}
 
-\item{p}{number of variables to simulate}
+\item{p}{Number of variables to simulate.}
 
-\item{var}{variance used to construct variance-covarinace matrix.}
+\item{var}{Variance used to construct variance-covarinace matrix.}
 
-\item{cov}{covariance used to construct variance-covarinace matrix.}
+\item{cov}{Covariance used to construct variance-covarinace matrix.}
 
-\item{group_means}{a vector of the same length as the number of grouping variables}
+\item{group_means}{A vector of the same length as the number of grouping variables.}
 
-\item{group}{specify the name of the column containing grouping variables}
+\item{group}{Character. Used to specify the name of the column containing grouping variables.}
 
-\item{name}{an optional name to be appended to the column names in the output}
+\item{name}{An optional name to be appended to the column names in the output.}
 
-\item{seed}{an optional seed for random number generation.  If `NA` a random seed will be used.}
+\item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
 }
 \value{
 a tibble
@@ -31,6 +31,14 @@ a tibble
 To-do: make this work with `dplyr::group_by()` instead of `group =`
 }
 \examples{
-df <- sim_cat(30, 3)
-sim_discr(df, p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
+library(dplyr)
+sim_cat(N = 30, n_groups = 3) \%>\%
+sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 }
+\seealso{
+\code{\link{sim_cat}}, \code{\link{sim_covar}}
+
+Other multivariate normal functions: \code{\link{sim_cat}},
+  \code{\link{sim_covar}}
+}
+\concept{multivariate normal functions}

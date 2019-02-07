@@ -2,14 +2,16 @@
 % Please edit documentation in R/sim_multvar.R
 \name{sim_cat}
 \alias{sim_cat}
-\title{Simulate a dataset with a given number of observations and groups}
+\title{Simulate categorical data}
 \usage{
-sim_cat(N, n_groups, name = "group")
+sim_cat(.data = NULL, N = NULL, n_groups, name = "group")
 }
 \arguments{
-\item{N}{Total number of observations/rows}
+\item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.}
 
-\item{n_groups}{How many groups or treatments to simulate}
+\item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
+
+\item{n_groups}{How many groups or treatments to simulate.}
 
 \item{name}{The column name for the grouping variable.  Defaults to "group".}
 }
@@ -20,9 +22,17 @@ a tibble
 This is a simple wrapper that creates a tibble of length `N` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
 }
 \details{
-To-do: make this optionally accpet a dataframe and add categorical variables
-Make this optionally create multiple categorical variables as being nested or crossed or random
+To-do:
+
+- Make this optionally create multiple categorical variables as being nested or crossed or random
 }
 \examples{
-df <- sim_cat(30, 3)
+df <- sim_cat(N = 30, n_groups = 3)
 }
+\seealso{
+\code{\link{sim_covar}}, \code{\link{sim_discr}}
+
+Other multivariate normal functions: \code{\link{sim_covar}},
+  \code{\link{sim_discr}}
+}
+\concept{multivariate normal functions}
