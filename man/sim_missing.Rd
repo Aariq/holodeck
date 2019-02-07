@@ -7,11 +7,11 @@
 sim_missing(.data, prop, seed = NA)
 }
 \arguments{
-\item{.data}{a dataframe}
+\item{.data}{A dataframe.}
 
-\item{prop}{proportion of values to be set to NA}
+\item{prop}{Proportion of values to be set to `NA`.}
 
-\item{seed}{an optional seed for random number generation.  If `NA` a random seed will be used.}
+\item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
 }
 \value{
 a dataframe with NAs

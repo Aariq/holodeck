@@ -16,7 +16,8 @@
 #' @import dplyr
 #' @importFrom rlang :=
 #' @export
-#'
+#' @family multivariate normal functions
+#' @seealso \code{\link{sim_covar}}, \code{\link{sim_discr}}
 #' @examples
 #' df <- sim_cat(N = 30, n_groups = 3)
 sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
@@ -57,14 +58,15 @@ sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
 #'
 #' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.
 #' @param N Total number of observations/rows to simulate if `.data` is not supplied.
-#' @param p number of variables to simulate.
-#' @param var variance used to construct variance-covarinace matrix.
-#' @param cov covariance used to construct variance-covarinace matrix.
-#' @param name an optional name to be appended to the column names in the output.
-#' @param seed an optional seed for random number generation.  If `NA` (default) a random seed will be used.
+#' @param p Number of variables to simulate.
+#' @param var Variance used to construct variance-covarinace matrix.
+#' @param cov Covariance used to construct variance-covarinace matrix.
+#' @param name An optional name to be appended to the column names in the output.
+#' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
 #' @return a tibble
-#'
+#' @family multivariate normal functions
+#' @seealso \code{\link{sim_cat}}, \code{\link{sim_discr}}
 #' @importFrom MASS mvrnorm
 #' @import dplyr
 #' @importFrom stats runif
@@ -125,16 +127,19 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
 #'
 #' To-do: make this work with `dplyr::group_by()` instead of `group =`
 #'
-#' @param .data a dataframe containing a grouping variable column
-#' @param p number of variables to simulate
-#' @param var variance used to construct variance-covarinace matrix.
-#' @param cov covariance used to construct variance-covarinace matrix.
-#' @param group_means a vector of the same length as the number of grouping variables
-#' @param group specify the name of the column containing grouping variables
-#' @param name an optional name to be appended to the column names in the output
-#' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.
+#' @param .data A dataframe containing a grouping variable column.
+#' @param p Number of variables to simulate.
+#' @param var Variance used to construct variance-covarinace matrix.
+#' @param cov Covariance used to construct variance-covarinace matrix.
+#' @param group_means A vector of the same length as the number of grouping variables.
+#' @param group Character. Used to specify the name of the column containing grouping variables.
+#' @param name An optional name to be appended to the column names in the output.
+#' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
 #' @return a tibble
+#'
+#' @family multivariate normal functions
+#' @seealso \code{\link{sim_cat}}, \code{\link{sim_covar}}
 #'
 #' @importFrom MASS mvrnorm
 #' @importFrom stats runif
@@ -209,9 +214,9 @@ sim_discr <- function(.data, p, var, cov, group_means, group = "group", name = N
 #' Simulate missing values
 #'
 #' Takes a data frame and randomly replaces a user-supplied proportion of values with `NA`.
-#' @param .data a dataframe
-#' @param prop proportion of values to be set to NA
-#' @param seed an optional seed for random number generation.  If `NA` a random seed will be used.
+#' @param .data A dataframe.
+#' @param prop Proportion of values to be set to `NA`.
+#' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
 #' @return a dataframe with NAs
 #'

@@ -12,15 +12,15 @@ sim_covar(.data = NULL, N = NULL, p, var, cov, name = NA,
 
 \item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
 
-\item{p}{number of variables to simulate.}
+\item{p}{Number of variables to simulate.}
 
-\item{var}{variance used to construct variance-covarinace matrix.}
+\item{var}{Variance used to construct variance-covarinace matrix.}
 
-\item{cov}{covariance used to construct variance-covarinace matrix.}
+\item{cov}{Covariance used to construct variance-covarinace matrix.}
 
-\item{name}{an optional name to be appended to the column names in the output.}
+\item{name}{An optional name to be appended to the column names in the output.}
 
-\item{seed}{an optional seed for random number generation.  If `NA` (default) a random seed will be used.}
+\item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
 }
 \value{
 a tibble
@@ -33,3 +33,10 @@ library(dplyr)
 sim_cat(N = 30, n_groups = 3) \%>\%
 sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
 }
+\seealso{
+\code{\link{sim_cat}}, \code{\link{sim_discr}}
+
+Other multivariate normal functions: \code{\link{sim_cat}},
+  \code{\link{sim_discr}}
+}
+\concept{multivariate normal functions}
