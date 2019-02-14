@@ -1,14 +1,14 @@
 #' Plot PCA models created by `ropls::opls()`
 #'
-#' @param ropls_pca 
-#' @param group_var 
+#' @param ropls_pca
+#' @param group_var
 #' @param annotate place to put model statistics on the plot
 #'
 #' @return a ggplot object
-#' 
+#'
 #' @import latex2exp
 #' @import ggplot2
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -42,16 +42,15 @@ plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subti
 }
 
 
-
 #' Plot PLS-DA models produced by `ropls::opls()`
 #'
 #' @param ropls_plsda a PLS model with a discrete Y variable produced by `ropls::opls()`
 #' @param annotate place to put model statistics on the plot
 #' @return a ggplot object
-#' 
+#'
 #' @import latex2exp
 #' @import ggplot2
-#' 
+#'
 #' @export
 #'
 #' @examples
@@ -86,10 +85,10 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
 #' @param ropls_pls a PLS model with a discrete Y variable produced by `ropls::opls()`
 #' @param annotate place to put model statistics on the plot
 #' @return a ggplot object
-#' 
+#'
 #' @import ggplot2
 #' @import latex2exp
-#' 
+#'
 #' @export
 #'
 #' @examples
