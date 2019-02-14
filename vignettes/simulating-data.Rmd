@@ -16,24 +16,23 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Intro
+# To-do:
 
-Multivariate data are data with many variables that often co-vary with eachother.  To simulate co-varying multivariate normal data one can use the `mvrnorm()` function from the `MASS` package. However, this requires input of a covariance matrix and returns a matrix.  The `tidymvsim` package provides functions that are "tidy" in the sense that they work with dataframes and the pipe operator (`%>%`).  Here, I'll demonstrate how to create some multivariate datasets, explore them with the `corrr` package, and analyze data with principal component analysis (PCA) and partial least squares discriminant analysis (PLS-DA) using the `ropls` package
+- look at vignettes for some other tidyverse package to get ideas for organization/section titles
 
-# Load packages
+# Introduction
 
-```{r}
-library(tidymvsim)
-library(dplyr)
-library(corrr)
-library(ropls)
-```
+To simulate co-varying multivariate normal data one can use the `mvrnorm()` function from the `MASS` package. However, this requires input of a covariance matrix and returns a matrix.  The `tidymvsim` package provides functions that are "tidy" in the sense that they work with dataframes and the pipe operator (`%>%`).  Here, I'll demonstrate how to create some multivariate datasets, explore them with the `corrr` package, and analyze data with principal component analysis (PCA) and partial least squares discriminant analysis (PLS-DA) using the `ropls` package
+
 
 # Simulate data
 
 To simulate multivariate data you need to start with a data frame or a tibble.  Once you have a dataframe or tibble, the `sim_*()` functions add columns onto it.
 
 ```{r}
+library(tidymvsim)
+library(dplyr)
+
 df <- tibble(Y = rep(c("a", "b"), each = 5))
 df %>% sim_covar(p = 5, var = 1, cov = 0.5)
 ```
@@ -60,14 +59,14 @@ df %>% sim_discr(p = 5, var = 1, cov = 0.1, group = "Y", group_means = c(1, -1))
 
 # Chaining functions with `%>%`
 
-One of the advantage of the `tidymvsim` package is the ability to chain functions together to create complex data covariance structures. You can change functions together in any order although the `sim_discr()` function requires a grouping variable.
+One advantage of the `tidymvsim` package is the ability to chain functions together to create complex data covariance structures. You can chain functions together in any order although the `sim_discr()` function requires a grouping variable.
 
 First, let's create a tibble with two groups of co-varying variables and visualize the covariance structure. All of the `sim_*` functions (besides `sim_missing()`) take an optional name argument which names the variables created.
 
 ```{r}
 df <-
-  sim_covar(N = 20, p = 5, var = 1, cov = 0.1, name = "low") %>% #5 variables with low covariance
-  sim_covar(p = 5, var = 1, cov = 0.7, name = "high")            #5 variables with high covariance
+  sim_covar(N = 20, p = 3, var = 1, cov = 0.1, name = "low") %>% #5 variables with low covariance
+  sim_covar(p = 4, var = 1, cov = 0.8, name = "high")            #5 variables with high covariance
 df
 ```
 
@@ -77,8 +76,7 @@ Now we could add a categorial variable, and some variables that discriminate bet
 df1 <-
   df %>% 
   sim_cat(n_groups = 2, name = "factor") %>% 
-  sim_discr(p = 5, var = 1, cov = 0.1, group = "factor", group_means = c(-1, 1), name = "discr") %>% 
-  sim_discr(p = 5, var = 0.5, cov = 0.2, group = "factor", group_means = c(0, -0.5), name = "discr2")
+  sim_discr(p = 5, var = 1, cov = 0.1, group = "factor", group_means = c(-1, 1), name = "discr")
 df1
 ```
 
@@ -93,15 +91,15 @@ df2
 
 # Visualizing correlation
 
+The [corrr](https://github.com/drsimonj/corrr) package provides tools for viusalizing correlation structures.
+
 ```{r}
+library(corrr)
 x <-
   df2 %>%
   select(-factor) %>% 
   correlate() %>% #creates a correlation dataframe
-  rearrange() %>% #arrages by strength of correlation
   shave() #removes uppper triangle
-
-fashion(x) #pretty printing of correlation dataframes
 ```
 
 ```{r}
@@ -110,25 +108,44 @@ rplot(x)
 
 # Analyzing data
 
-One reason you might want to simulate multivariate data used to test and compare a variety of statistical techniques. This package also contains some wrappers that help access model objects created by the `opls()` function from the `ropls` package. Refer to documentation on `opls()` for how to use it for PCA and PLS-DA models
+One reason you might want to simulate multivariate data used to test and compare a variety of statistical techniques. This package also contains some wrappers that help deal with model objects created by the `opls()` function from the `ropls` package. Refer to documentation on `opls()` for how to use it for PCA and PLS-DA models
 
-## Do PCA
+## Do PCA and PLS-DA
 
 ```{r}
+library(ropls)
 pca <- opls(select(df2, -factor), plotL = FALSE, printL = FALSE)
+plsda <- opls(select(df2, -factor), df2$factor, plotL = FALSE, printL = FALSE, predI = 2)
 ```
+
+After creating these models, we can create default plots using `plot_pca()` and `plot_plsda()` which use `ggplot2`.
 
 ```{r}
-# chemhelper::plot_pca(pca, group_var = factor)
+chemhelper::plot_pca(pca, group_var = df2$factor)
 ```
 
-
-## Do PLS-DA
-
-```{r}
-plsda <- opls(select(df2, -factor), df2$factor, plotL = FALSE, printL = FALSE)
-```
 ```{r}
 chemhelper::plot_plsda(plsda)
+```
+
+And we can use some accessor functions to get scores, loadings, and VIP scores (for PLS)
+
+**PCA**
+
+```{r}
+#pca scores and loadings
+chemhelper::get_scores(pca)
+chemhelper::get_loadings(pca) %>%
+  arrange(desc(abs(p1)))
+```
+
+**PLS_DA**
+
+```{r}
+chemhelper::get_scores(plsda)
+chemhelper::get_loadings(plsda) %>%
+  arrange(desc(abs(p1)))
+chemhelper::get_VIP(plsda) %>% 
+  arrange(desc(VIP))
 ```
 
