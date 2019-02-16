@@ -150,6 +150,7 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
 #' @examples
 #' library(dplyr)
 #' sim_cat(N = 30, n_groups = 3) %>%
+#' group_by(group) %>%
 #' sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
   if(is.na(seed)){
