@@ -7,3 +7,5 @@ r_packages:
   - covr
 after_success:
   - Rscript -e 'library(covr); codecov()'
+r:
+  - 3.5.1
