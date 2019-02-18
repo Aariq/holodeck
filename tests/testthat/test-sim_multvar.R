@@ -30,23 +30,29 @@ test_that("sim_covar handles var and cov longer than 1", {
 
 })
 
-context("Check that chaining functions works")
 
-test_that("default for name= works", {
-  expect_that(sim_cat(N = 30, n_groups = 2) %>%
-                sim_covar(p = 20, var = 1, cov = 0.5) %>%
-                sim_covar(p = 20, var = 1, cov = 0.4) %>%
-                sim_discr(p = 20, var = 1, cov = 0.1, group_means = c(0, 1)),
-              is_a("tbl_df"))
+context("group_by() works with sim_ functions")
+test_that("group_by() %>% sim_discr() works", {
+  expect_is(sim_cat(N = 10, n_groups = 2) %>%
+    group_by(group) %>%
+    sim_discr(p = 10, var = 1, cov = 0, group_means = c(-1, 1)), "data.frame")
 })
 
-test_that("functions work with custom group column name", {
-  expect_that(sim_cat(N = 30, n_groups = 2) %>%
-                rename("testing" = group) %>%
-                sim_discr(p = 20, var = 1, cov = 0.5, group = "testing", group_means = c(1,2)),
-              is_a("tbl_df"))
+test_that("no grouping variable causes sim_discr to error", {
+  expect_error(sim_cat(N=10, n_groups = 2) %>%
+                 sim_discr(p = 20, var = 1, cov = 0, group_means = c(1,2)))
 })
 
+test_that("group_by() doesn't screw up sim_covar", {
+  df <- sim_cat(N = 10, n_groups = 2)
+  expect_equal(df %>% sim_covar(p = 10, var = 1, cov = 0.5, seed = 10),
+               df %>% group_by(group) %>% sim_covar(p = 10, var = 1, cov = 0.5, seed = 10))
+})
+
+test_that("sim_missing() works with grouped dataframes", {
+          expect_equal(diamonds %>% group_by(cut) %>% sim_missing(prop = 0.01, seed = 22),
+                       diamonds %>% sim_missing(prop = 0.01, seed = 22))
+  })
 
 context("check RNG is working as expected")
 
@@ -59,9 +65,11 @@ test_that("RNG is consistent for sim_covar", {
 
 test_that("RNG is consistent for sim_discr", {
   expect_that(sim_cat(N = 30, n_groups = 2) %>%
-              sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(0,1), seed = 100),
+                group_by(group) %>%
+                sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(0,1), seed = 100),
               is_identical_to(
                 sim_cat(N = 30, n_groups = 2) %>%
+                  group_by(group) %>%
                   sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(0,1), seed = 100)
                 )
               )
@@ -72,7 +80,8 @@ context("Testing sim_missing()")
 test_that("sim_missing adds NAs", {
   expect_true(sim_cat(N = 30, n_groups = 3) %>%
                 sim_covar(p = 6, var = 1, cov = 0.5) %>%
-                sim_missing(prop = 0.1) %>% anyNA())
+                sim_missing(prop = 0.1) %>%
+                anyNA())
 })
 
 
@@ -88,10 +97,11 @@ test_that("sim_missing adds the correct proprotion of NAs", {
 
 test_that("sim_missing works with small proportions", {
   expect_warning(sim_cat(N = 10, n_groups = 2) %>%
-                  sim_covar(p = 10, var = 1, cov = 0, name = "uncorr") %>%
-                  sim_covar(p = 10, var = 1, cov = 0.5, name = "corr") %>%
-                  sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1, 1), name = "discr") %>%
-                  sim_missing(prop = 0.0001))
+                   sim_covar(p = 10, var = 1, cov = 0, name = "uncorr") %>%
+                   sim_covar(p = 10, var = 1, cov = 0.5, name = "corr") %>%
+                   group_by(group) %>%
+                   sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1, 1), name = "discr") %>%
+                   sim_missing(prop = 0.0001))
 })
 
 context("functions work if not supplied a data frame or tibble with .data")

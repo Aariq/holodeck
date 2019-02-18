@@ -1,0 +1,144 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+[![Build Status](https://travis-ci.org/Aariq/tidymvsim.svg?branch=master)](https://travis-ci.org/Aariq/tidymvsim)[![codecov](https://codecov.io/gh/Aariq/tidymvsim/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/tidymvsim)
+
+# tidymvsim: A Tidy Interface For Simulating Multivariate Data
+
+`tidymvsim` allows quick and simple creation of simulated multivariate data with variables that co-vary or discriminate between levels of a categorical variable.  The resulting simulated multivariate dataframes are useful for testing the performance of multivariate statistical techniques under different scenarios, power analysis, and more!
+
+## Installation
+
+`tidymvsim` is currently not on CRAN, but you can install it from github with the following R code:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("Aariq/tidymvsim")
+```
+
+## Load packages
+
+`tidymvsim` is built to work with `dplyr` functions, including the pipe (` %>% `)
+
+```{r example, message=FALSE, warning=FALSE}
+library(tidymvsim)
+library(dplyr)
+```
+
+## Example 1: Investigating PCA
+
+Let's say we want to learn more about how principal component analysis (PCA) works.  Specifically, what matters more in terms of creating a principal component---variance or covariance of variables? To this end, you might create a dataframe with a few variables with high covariance and low variance and another set of variables with low covariance and high variance
+
+```{R}
+set.seed(925)
+df1 <- 
+  sim_covar(N = 20, p = 3, cov = 0.9, var = 1, name = "high_cov") %>%
+  sim_covar(p = 3, cov = 0.1, var = 2, name = "high_var") 
+```
+
+Explore correlation structure visually.
+
+```{r}
+plot(df1)
+```
+
+And do PCA
+
+```{r}
+df1.pca <- princomp(df1)
+loadings(df1.pca)
+biplot(df1.pca)
+```
+
+It looks like the variables with high covariance and low variance load most strongly on the first PC.
+
+## Example 2: Effect of missing data
+
+What's the effect of missing data on a statistical analysis? The `sim_missing()` function replaces a proportion of values with NA.  Let's see how it affects a PERMANOVA.
+
+### Create datasets
+
+We can chain several `sim_*` functions to quickly create a dataframe.
+
+```{r}
+df2 <- 
+  sim_cat(N = 25, n_groups = 3, name = "factor") %>% 
+  sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
+  group_by(factor) %>% 
+  sim_discr(p = 3, var = 1, cov = 0, group_means = c(-1.5, 0, 1.5), name  = "signal")
+df2
+```
+
+We can then use `map()` from the `purrr` package to create many randomly generated datasets using the same specifications, with and without missing values.
+
+```{r}
+library(purrr)
+```
+
+```{r}
+set.seed(100)
+dfs <-
+  map(1:20, 
+      ~sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
+        sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
+        group_by(factor) %>% 
+        sim_discr(p = 3, var = 1, cov = 0, group_means = c(-0.5, 0, 0.5), name  = "signal") %>% 
+        ungroup())
+```
+
+### Simulate missing data
+
+We can now map the `sim_missing()` function to randomly introduce NAs to the datasets.
+
+```{r}
+set.seed(100)
+dfs.missing <-
+  map(dfs, ~sim_missing(., prop = 0.2))
+```
+
+And finally, deal with those NAs with multiple imputation with the `mice` package
+
+```{r warning=FALSE}
+library(mice)
+# this might take a few seconds
+dfs.imputed <-
+  map(dfs.missing, ~mice(., printFlag = FALSE) %>% complete())
+```
+
+Here, we can compare an example dataset as original, with NAs, and imputed:
+
+```{r}
+head(dfs[[1]])
+head(dfs.missing[[1]])
+head(dfs.imputed[[1]])
+```
+
+### Analyze
+
+Then we could run PERMANOVAs on each dataset and compare the mean p-values to get an idea how how missing values affect the power of the test.
+
+```{r}
+library(vegan)
+ps <- 
+  map_dbl(dfs,
+          ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
+
+ps.imputed <- 
+  map_dbl(dfs.imputed,
+          ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
+
+tibble(ps, ps.imputed) %>% 
+  summarize_all(mean, na.rm = TRUE)
+```
+

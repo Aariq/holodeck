@@ -4,8 +4,7 @@
 \alias{sim_discr}
 \title{Simulate co-varying variables with different means by group}
 \usage{
-sim_discr(.data, p, var, cov, group_means, group = "group", name = NA,
-  seed = NA)
+sim_discr(.data, p, var, cov, group_means, name = NA, seed = NA)
 }
 \arguments{
 \item{.data}{A dataframe containing a grouping variable column.}
@@ -17,8 +16,6 @@ sim_discr(.data, p, var, cov, group_means, group = "group", name = NA,
 \item{cov}{Covariance used to construct variance-covarinace matrix.}
 
 \item{group_means}{A vector of the same length as the number of grouping variables.}
-
-\item{group}{Character. Used to specify the name of the column containing grouping variables.}
 
 \item{name}{An optional name to be appended to the column names in the output.}
 
@@ -33,6 +30,7 @@ To-do: make this work with `dplyr::group_by()` instead of `group =`
 \examples{
 library(dplyr)
 sim_cat(N = 30, n_groups = 3) \%>\%
+group_by(group) \%>\%
 sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 }
 \seealso{

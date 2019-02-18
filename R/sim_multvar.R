@@ -24,7 +24,7 @@ sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
   name <- sym(name)
   #assert that either .data or N is supplied, not neither nor both
   if(is.null(.data) & is.null(N)) {
-    stop("You must supply either a dataframe to '.data' or 'N'")
+    stop("You must supply either '.data' or 'N'")
   }
   if(!is.null(.data) & !is.null(N)) {
     stop("Please supply either '.data' or 'N', not both")
@@ -80,7 +80,7 @@ sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
 
 sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA) {
   if(is.null(.data) & is.null(N)) {
-    stop("You must supply either a dataframe to '.data' or 'N'")
+    stop("You must supply either '.data' or 'N'")
   }
   if(!is.null(.data) & !is.null(N)) {
     stop("Please supply either '.data' or 'N', not both")
@@ -132,7 +132,6 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
 #' @param var Variance used to construct variance-covarinace matrix.
 #' @param cov Covariance used to construct variance-covarinace matrix.
 #' @param group_means A vector of the same length as the number of grouping variables.
-#' @param group Character. Used to specify the name of the column containing grouping variables.
 #' @param name An optional name to be appended to the column names in the output.
 #' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
@@ -151,21 +150,25 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
 #' @examples
 #' library(dplyr)
 #' sim_cat(N = 30, n_groups = 3) %>%
+#' group_by(group) %>%
 #' sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
-sim_discr <- function(.data, p, var, cov, group_means, group = "group", name = NA, seed = NA){
+sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
   if(is.na(seed)){
     seed = as.integer(runif(1) * 10e6)
   }
   N <- nrow(.data)
-  group_var <- sym(group)
-  n_groups <- select(.data, !!group_var) %>% unique() %>% nrow()
+  group_var <- groups(.data)
+  if(is.null(group_var)){
+    stop("Please supply a grouping variable with dplyr::group_by()")
+    }
+  n_groups <- select(.data, !!!group_var) %>% unique() %>% nrow()
   #arrange by grouping variable for easier merging later
-  .data <- arrange(.data, !!group_var)
+  .data <- arrange(.data, !!!group_var)
 
   #number of observations in each group
   len_groups <-
     .data %>%
-    group_by(!!group_var) %>%
+    group_by(!!!group_var) %>%
     summarise(lens = n()) %>%
     purrr::pluck("lens")
 
@@ -235,6 +238,9 @@ sim_missing <-
     if(is.na(seed)){
       seed = as.integer(runif(1) * 10e6)
     }
+    g <- groups(.data)
+    .data <- ungroup(.data)
+
     datadim <- .data %>%
       select_if(is.double) %>%
       dim()
@@ -251,7 +257,8 @@ sim_missing <-
 
     mask <- matrix(na.vector, nrow = datadim[1], ncol = datadim[2])
     newdata <- .data %>%
-      select_if(is.double) + mask
-    newdf <- bind_cols(select_if(.data, ~!is.double(.)), newdata)
+      select_if(is.numeric) + mask
+    newdf <- bind_cols(select_if(.data, ~!is.numeric(.)), newdata) %>%
+      group_by(!!!g)
     return(newdf)
   }

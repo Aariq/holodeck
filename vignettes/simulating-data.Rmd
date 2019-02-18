@@ -53,7 +53,9 @@ sim_cat(N = 10, n_groups = 2)
 `sim_discr()` simulates covarying data that differs in means between levels of some grouping variable.
 
 ```{r}
-df %>% sim_discr(p = 5, var = 1, cov = 0.1, group = "Y", group_means = c(1, -1))
+df %>%
+  group_by(Y) %>% 
+  sim_discr(p = 5, var = 1, cov = 0.1, group_means = c(1, -1))
 ```
 
 
@@ -76,7 +78,8 @@ Now we could add a categorial variable, and some variables that discriminate bet
 df1 <-
   df %>% 
   sim_cat(n_groups = 2, name = "factor") %>% 
-  sim_discr(p = 5, var = 1, cov = 0.1, group = "factor", group_means = c(-1, 1), name = "discr")
+  group_by(factor) %>% 
+  sim_discr(p = 5, var = 1, cov = 0.1, group_means = c(-1, 1), name = "discr")
 df1
 ```
 
@@ -86,6 +89,7 @@ Finally, if you want to simulate missing values, you can use `sim_missing()` to 
 df2 <-
   df1 %>% 
   sim_missing(prop = 0.1)
+df2 <- ungroup(df2)
 df2
 ```
 
@@ -102,7 +106,7 @@ x <-
   shave() #removes uppper triangle
 ```
 
-```{r}
+```{r fig.width=6}
 rplot(x) 
 ```
 
@@ -120,12 +124,12 @@ plsda <- opls(select(df2, -factor), df2$factor, plotL = FALSE, printL = FALSE, p
 
 After creating these models, we can create default plots using `plot_pca()` and `plot_plsda()` which use `ggplot2`.
 
-```{r}
-chemhelper::plot_pca(pca, group_var = df2$factor)
+```{r fig.width=6}
+plot_pca(pca, group_var = df2$factor)
 ```
 
-```{r}
-chemhelper::plot_plsda(plsda)
+```{r fig.width=6}
+plot_plsda(plsda)
 ```
 
 And we can use some accessor functions to get scores, loadings, and VIP scores (for PLS)
@@ -134,18 +138,18 @@ And we can use some accessor functions to get scores, loadings, and VIP scores (
 
 ```{r}
 #pca scores and loadings
-chemhelper::get_scores(pca)
-chemhelper::get_loadings(pca) %>%
+get_scores(pca)
+get_loadings(pca) %>%
   arrange(desc(abs(p1)))
 ```
 
 **PLS_DA**
 
 ```{r}
-chemhelper::get_scores(plsda)
-chemhelper::get_loadings(plsda) %>%
+get_scores(plsda)
+get_loadings(plsda) %>%
   arrange(desc(abs(p1)))
-chemhelper::get_VIP(plsda) %>% 
+get_VIP(plsda) %>% 
   arrange(desc(VIP))
 ```
 

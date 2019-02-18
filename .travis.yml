@@ -5,5 +5,11 @@ sudo: false
 cache: packages
 r_packages:
   - covr
+bioc_packages:
+  - ropls
+r_github_packages:
+  - drsimonj/corrr
 after_success:
   - Rscript -e 'library(covr); codecov()'
+r:
+  - 3.5.1
