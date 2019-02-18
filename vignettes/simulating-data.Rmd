@@ -125,11 +125,11 @@ plsda <- opls(select(df2, -factor), df2$factor, plotL = FALSE, printL = FALSE, p
 After creating these models, we can create default plots using `plot_pca()` and `plot_plsda()` which use `ggplot2`.
 
 ```{r fig.width=6}
-chemhelper::plot_pca(pca, group_var = df2$factor)
+plot_pca(pca, group_var = df2$factor)
 ```
 
 ```{r fig.width=6}
-chemhelper::plot_plsda(plsda)
+plot_plsda(plsda)
 ```
 
 And we can use some accessor functions to get scores, loadings, and VIP scores (for PLS)
@@ -138,18 +138,18 @@ And we can use some accessor functions to get scores, loadings, and VIP scores (
 
 ```{r}
 #pca scores and loadings
-chemhelper::get_scores(pca)
-chemhelper::get_loadings(pca) %>%
+get_scores(pca)
+get_loadings(pca) %>%
   arrange(desc(abs(p1)))
 ```
 
 **PLS_DA**
 
 ```{r}
-chemhelper::get_scores(plsda)
-chemhelper::get_loadings(plsda) %>%
+get_scores(plsda)
+get_loadings(plsda) %>%
   arrange(desc(abs(p1)))
-chemhelper::get_VIP(plsda) %>% 
+get_VIP(plsda) %>% 
   arrange(desc(VIP))
 ```
 
