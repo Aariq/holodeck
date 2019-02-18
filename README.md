@@ -86,6 +86,8 @@ What’s the effect of missing data on a statistical analysis? The
 `sim_missing()` function replaces a proportion of values with NA. Let’s
 see how it affects a PERMANOVA.
 
+### Create datasets
+
 We can chain several `sim_*` functions to quickly create a dataframe.
 
 ``` r
@@ -132,17 +134,75 @@ dfs <-
         ungroup())
 ```
 
+### Simulate missing data
+
+We can now map the `sim_missing()` function to randomly introduce NAs to
+the datasets.
+
 ``` r
 set.seed(100)
 dfs.missing <-
-  map(1:20, 
-      ~sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
-        sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
-        group_by(factor) %>% 
-        sim_discr(p = 3, var = 1, cov = 0, group_means = c(-0.5, 0, 0.5), name  = "signal") %>% 
-        ungroup() %>% 
-        sim_missing(prop = 0.1))
+  map(dfs, ~sim_missing(., prop = 0.2))
 ```
+
+And finally, deal with those NAs with multiple imputation with the
+`mice` package
+
+``` r
+library(mice)
+#> Loading required package: lattice
+#> 
+#> Attaching package: 'mice'
+#> The following objects are masked from 'package:base':
+#> 
+#>     cbind, rbind
+# this might take a few seconds
+dfs.imputed <-
+  map(dfs.missing, ~mice(., printFlag = FALSE) %>% complete())
+```
+
+Here, we can compare an example dataset as original, with NAs, and
+imputed:
+
+``` r
+head(dfs[[1]])
+#> # A tibble: 6 x 7
+#>   factor noise_1 noise_2 noise_3 signal_1 signal_2 signal_3
+#>   <chr>    <dbl>   <dbl>   <dbl>    <dbl>    <dbl>    <dbl>
+#> 1 a       -1.69    0.236  -1.09    -0.498   -1.37    0.557 
+#> 2 a        0.166   0.307  -0.968   -0.180    0.316  -0.704 
+#> 3 a       -0.230   0.744   0.949   -1.96    -1.19    1.33  
+#> 4 a       -1.55   -0.111   2.62    -1.36    -0.234   0.707 
+#> 5 a        0.639   0.801  -2.89    -0.867   -1.29   -0.332 
+#> 6 a        0.997   0.446  -1.85    -0.902   -0.341   0.0175
+head(dfs.missing[[1]])
+#> # A tibble: 6 x 7
+#>   factor noise_1 noise_2 noise_3 signal_1 signal_2 signal_3
+#>   <chr>    <dbl>   <dbl>   <dbl>    <dbl>    <dbl>    <dbl>
+#> 1 a       NA      NA      -1.09    -0.498   NA       0.557 
+#> 2 a        0.166   0.307  -0.968   -0.180    0.316  -0.704 
+#> 3 a       NA       0.744   0.949   -1.96    -1.19    1.33  
+#> 4 a       -1.55   -0.111   2.62    -1.36    -0.234   0.707 
+#> 5 a        0.639   0.801  -2.89    -0.867   NA      -0.332 
+#> 6 a        0.997   0.446  -1.85    -0.902   -0.341   0.0175
+head(dfs.imputed[[1]])
+#>   factor    noise_1    noise_2    noise_3   signal_1   signal_2
+#> 1      a -0.1257547  0.8013671 -1.0852542 -0.4981282  0.8973459
+#> 2      a  0.1657635  0.3070560 -0.9680104 -0.1795347  0.3160598
+#> 3      a  0.3738299  0.7444634  0.9490844 -1.9590652 -1.1913561
+#> 4      a -1.5515005 -0.1112986  2.6246159 -1.3565607 -0.2342102
+#> 5      a  0.6387119  0.8013671 -2.8872108 -0.8670493 -0.3410057
+#> 6      a  0.9972444  0.4459734 -1.8517622 -0.9024310 -0.3410057
+#>      signal_3
+#> 1  0.55695263
+#> 2 -0.70440247
+#> 3  1.33017336
+#> 4  0.70676473
+#> 5 -0.33178566
+#> 6  0.01747177
+```
+
+### Analyze
 
 Then we could run PERMANOVAs on each dataset and compare the mean
 p-values to get an idea how how missing values affect the power of the
@@ -150,21 +210,21 @@ test.
 
 ``` r
 library(vegan)
+#> Warning: package 'vegan' was built under R version 3.5.2
 #> Loading required package: permute
-#> Loading required package: lattice
-#> This is vegan 2.5-3
+#> This is vegan 2.5-4
 ps <- 
   map_dbl(dfs,
           ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
 
-ps.missing <- 
-  map_dbl(dfs.missing,
+ps.imputed <- 
+  map_dbl(dfs.imputed,
           ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
 
-tibble(ps, ps.missing) %>% 
+tibble(ps, ps.imputed) %>% 
   summarize_all(mean, na.rm = TRUE)
 #> # A tibble: 1 x 2
-#>       ps ps.missing
+#>       ps ps.imputed
 #>    <dbl>      <dbl>
-#> 1 0.0360     0.0853
+#> 1 0.0384      0.130
 ```

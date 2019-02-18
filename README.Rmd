@@ -66,6 +66,8 @@ It looks like the variables with high covariance and low variance load most stro
 
 What's the effect of missing data on a statistical analysis? The `sim_missing()` function replaces a proportion of values with NA.  Let's see how it affects a PERMANOVA.
 
+### Create datasets
+
 We can chain several `sim_*` functions to quickly create a dataframe.
 
 ```{r}
@@ -94,31 +96,48 @@ dfs <-
         ungroup())
 ```
 
+### Simulate missing data
+
+We can now map the `sim_missing()` function to randomly introduce NAs to the datasets.
+
 ```{r}
 set.seed(100)
 dfs.missing <-
-  map(1:20, 
-      ~sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
-        sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
-        group_by(factor) %>% 
-        sim_discr(p = 3, var = 1, cov = 0, group_means = c(-0.5, 0, 0.5), name  = "signal") %>% 
-        ungroup() %>% 
-        sim_missing(prop = 0.1))
+  map(dfs, ~sim_missing(., prop = 0.2))
 ```
+
+And finally, deal with those NAs with multiple imputation with the `mice` package
+
+```{r warning=FALSE}
+library(mice)
+# this might take a few seconds
+dfs.imputed <-
+  map(dfs.missing, ~mice(., printFlag = FALSE) %>% complete())
+```
+
+Here, we can compare an example dataset as original, with NAs, and imputed:
+
+```{r}
+head(dfs[[1]])
+head(dfs.missing[[1]])
+head(dfs.imputed[[1]])
+```
+
+### Analyze
 
 Then we could run PERMANOVAs on each dataset and compare the mean p-values to get an idea how how missing values affect the power of the test.
 
-```{r warning=FALSE}
+```{r}
 library(vegan)
 ps <- 
   map_dbl(dfs,
           ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
 
-ps.missing <- 
-  map_dbl(dfs.missing,
+ps.imputed <- 
+  map_dbl(dfs.imputed,
           ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
 
-tibble(ps, ps.missing) %>% 
+tibble(ps, ps.imputed) %>% 
   summarize_all(mean, na.rm = TRUE)
 ```
 
