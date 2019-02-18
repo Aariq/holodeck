@@ -1,8 +1,8 @@
 #' Plot PCA models created by `ropls::opls()`
 #'
-#' @param ropls_pca
-#' @param group_var
-#' @param annotate place to put model statistics on the plot
+#' @param ropls_pca a PCA model with a discrete Y variable produced by `ropls::opls()`
+#' @param group_var a variable used to plot groups
+#' @param annotate where to put model statistics on the plot
 #'
 #' @return a ggplot object
 #'
@@ -16,7 +16,7 @@
 #' plot_pca(pca, data$treatment)
 #' }
 plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subtitle")){
-  plotdata <- chemhelper::get_plotdata(ropls_pca)
+  plotdata <- tidymvsim::get_plotdata(ropls_pca)
   if(is.null(group_var)){
     base <- ggplot(plotdata$scores, aes(x = p1, y = p2)) #this needs tidyeval help I think.
   } else {
@@ -58,7 +58,7 @@ plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subti
 #' plot_plsda(plsda)
 #' }
 plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
-  plotdata <- chemhelper::get_plotdata(ropls_plsda)
+  plotdata <- tidymvsim::get_plotdata(ropls_plsda)
   p <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = y1)) +
     geom_point() +
     stat_ellipse() +
@@ -96,7 +96,7 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
 #' plot_pls(pls)
 #' }
 plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
-  plotdata <- chemhelper::get_plotdata(ropls_pls)
+  plotdata <- tidymvsim::get_plotdata(ropls_pls)
   p <- ggplot(plotdata$scores, aes(x = p1, y = p2, color = y1)) +
     geom_point() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
@@ -134,7 +134,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
 #' plot_opls(opls)
 #' }
 plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
-  plotdata <- chemhelper::get_plotdata(ropls_pls)
+  plotdata <- tidymvsim::get_plotdata(ropls_pls)
   p <- ggplot(plotdata$scores, aes(x = p1, y = o1, color = y1)) +
     geom_point() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),

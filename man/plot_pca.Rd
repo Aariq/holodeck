@@ -8,7 +8,11 @@ plot_pca(ropls_pca, group_var = NULL, annotate = c("caption",
   "subtitle"))
 }
 \arguments{
-\item{annotate}{place to put model statistics on the plot}
+\item{ropls_pca}{a PCA model with a discrete Y variable produced by `ropls::opls()`}
+
+\item{group_var}{a variable used to plot groups}
+
+\item{annotate}{where to put model statistics on the plot}
 }
 \value{
 a ggplot object

@@ -12,8 +12,9 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
+[![Build Status](https://travis-ci.org/Aariq/tidymvsim.svg?branch=master)](https://travis-ci.org/Aariq/tidymvsim)[![codecov](https://codecov.io/gh/Aariq/tidymvsim/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/tidymvsim)
 
-# tidymvsim
+# tidymvsim: A Tidy Interface For Simulating Multivariate Data
 
 `tidymvsim` allows quick and simple creation of simulated multivariate data with variables that co-vary or discriminate between levels of a categorical variable.  The resulting simulated multivariate dataframes are useful for testing the performance of multivariate statistical techniques under different scenarios, power analysis, and more!
 
