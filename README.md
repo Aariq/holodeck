@@ -10,7 +10,8 @@ Status](https://travis-ci.org/Aariq/tidymvsim.svg?branch=master)](https://travis
 data with variables that co-vary or discriminate between levels of a
 categorical variable. The resulting simulated multivariate dataframes
 are useful for testing the performance of multivariate statistical
-techniques under different scenarios, power analysis, and more\!
+techniques under different scenarios, power analysis, or just doing a
+sanity check when trying out a new multivariate method.
 
 ## Installation
 
@@ -149,7 +150,7 @@ dfs.missing <-
 ```
 
 And finally, deal with those NAs with multiple imputation with the
-`mice` package
+`mice` package.
 
 ``` r
 library(mice)

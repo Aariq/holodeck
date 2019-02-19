@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 
 # tidymvsim: A Tidy Interface For Simulating Multivariate Data
 
-`tidymvsim` allows quick and simple creation of simulated multivariate data with variables that co-vary or discriminate between levels of a categorical variable.  The resulting simulated multivariate dataframes are useful for testing the performance of multivariate statistical techniques under different scenarios, power analysis, and more!
+`tidymvsim` allows quick and simple creation of simulated multivariate data with variables that co-vary or discriminate between levels of a categorical variable.  The resulting simulated multivariate dataframes are useful for testing the performance of multivariate statistical techniques under different scenarios, power analysis, or just doing a sanity check when trying out a new multivariate method.
 
 ## Installation
 
@@ -107,7 +107,7 @@ dfs.missing <-
   map(dfs, ~sim_missing(., prop = 0.2))
 ```
 
-And finally, deal with those NAs with multiple imputation with the `mice` package
+And finally, deal with those NAs with multiple imputation with the `mice` package.
 
 ```{r warning=FALSE}
 library(mice)
