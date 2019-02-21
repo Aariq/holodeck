@@ -11,6 +11,7 @@ Description: Provides pipeable (` %>% `) wrappers for `MASS:mvnorm()` that allow
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+biocViews:
 Imports: 
     dplyr,
     tibble,
