@@ -7,9 +7,9 @@
 plot_plsda(ropls_plsda, annotate = c("caption", "subtitle"))
 }
 \arguments{
-\item{ropls_plsda}{a PLS model with a discrete Y variable produced by `ropls::opls()`}
+\item{ropls_plsda}{a PLS-DA model with a discrete Y variable produced by `ropls::opls()`}
 
-\item{annotate}{place to put model statistics on the plot}
+\item{annotate}{location on the plot to print model statistics}
 }
 \value{
 a ggplot object

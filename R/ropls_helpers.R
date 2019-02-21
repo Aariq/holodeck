@@ -83,7 +83,7 @@ get_scores <- function(model){
     scores <-
       model@scoreMN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
+    plot_data <- full_join(y, scores, by = "sample")
 
   } else if(model@typeC == "OPLS-DA"){
     #make a OPLS-DA data frame
@@ -94,11 +94,11 @@ get_scores <- function(model){
       model@orthoScoreMN %>%
       as_tibble(rownames = "sample")
     scores <-
-      full_join(pred.scores, ortho.scores)
+      full_join(pred.scores, ortho.scores, by = "sample")
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
+    plot_data <- full_join(y, scores, by = "sample")
 
   } else if(model@typeC == "PLS"){
     #make a PLS data frame
@@ -108,7 +108,7 @@ get_scores <- function(model){
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y ,scores)
+    plot_data <- full_join(y ,scores, by = "sample")
 
   } else if(model@typeC == "OPLS"){
     #make an OPLS data frame
@@ -119,11 +119,11 @@ get_scores <- function(model){
       model@orthoScoreMN %>%
       as_tibble(rownames = "sample")
     scores <-
-      full_join(pred.scores, ortho.scores)
+      full_join(pred.scores, ortho.scores, by = "sample")
     y <-
       model@suppLs$yMCN %>%
       as_tibble(rownames = "sample")
-    plot_data <- full_join(y, scores)
+    plot_data <- full_join(y, scores, by = "sample")
   }
   return(plot_data)
 }
@@ -182,7 +182,7 @@ get_modelinfo <- function(model){
 #' }
 
 get_plotdata <- function(model){
-  return(list("scores" = get_scores(model), #this gonna break things :-(
+  return(list("scores" = get_scores(model),
               "loadings" = get_loadings(model),
               "axis_stats" = model@modelDF,
               "model_stats" = model@summaryDF))

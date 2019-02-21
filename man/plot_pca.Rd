@@ -5,14 +5,14 @@
 \title{Plot PCA models created by `ropls::opls()`}
 \usage{
 plot_pca(ropls_pca, group_var = NULL, annotate = c("caption",
-  "subtitle"))
+  "subtitle", "none"))
 }
 \arguments{
-\item{ropls_pca}{a PCA model with a discrete Y variable produced by `ropls::opls()`}
+\item{ropls_pca}{a PCA model produced by `ropls::opls()`}
 
-\item{group_var}{a variable used to plot groups}
+\item{group_var}{a discrete variable used to plot groups}
 
-\item{annotate}{where to put model statistics on the plot}
+\item{annotate}{location on the plot to print model statistics}
 }
 \value{
 a ggplot object

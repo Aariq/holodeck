@@ -8,7 +8,7 @@ test_that("get_scores fails if not ropls model", {
 
 pca <- opls(mtcars, plotL = FALSE, printL = FALSE)
 pls <- opls(dplyr::select(mtcars, -mpg), mtcars$mpg,
-            plotL = FALSE, printL = FALSE)
+            plotL = FALSE, printL = FALSE, predI = 2)
 orthpls <- opls(dplyr::select(mtcars, -mpg), mtcars$mpg, predI = 1, orthoI = 1,
              plotL = FALSE, printL = FALSE)
 plsda <- opls(dplyr::select(mtcars, -gear), as.factor(mtcars$gear),
@@ -31,4 +31,12 @@ test_that("get_VIP() returns a data frame", {
   expect_is(get_VIP(orthpls), "data.frame")
   expect_is(get_VIP(plsda), "data.frame")
   expect_is(get_VIP(oplsda), "data.frame")
+})
+
+test_that("get_plotdata() doesn't return warnings", {
+  expect_silent(get_plotdata(pca))
+  expect_silent(get_plotdata(pls))
+  expect_silent(get_plotdata(orthpls))
+  expect_silent(get_plotdata(plsda))
+  expect_silent(get_plotdata(oplsda))
 })
