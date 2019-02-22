@@ -1,4 +1,4 @@
 library(testthat)
-library(tidymvsim)
+library(holodeck)
 
-test_check("tidymvsim")
+test_check("holodeck")

@@ -2,11 +2,11 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![Build
-Status](https://travis-ci.org/Aariq/tidymvsim.svg?branch=master)](https://travis-ci.org/Aariq/tidymvsim)[![codecov](https://codecov.io/gh/Aariq/tidymvsim/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/tidymvsim)
+Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-ci.org/Aariq/holodeck)[![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck)
 
-# tidymvsim: A Tidy Interface For Simulating Multivariate Data
+# holodeck: A Tidy Interface For Simulating Multivariate Data
 
-`tidymvsim` allows quick and simple creation of simulated multivariate
+`holodeck` allows quick and simple creation of simulated multivariate
 data with variables that co-vary or discriminate between levels of a
 categorical variable. The resulting simulated multivariate dataframes
 are useful for testing the performance of multivariate statistical
@@ -15,21 +15,21 @@ sanity check when trying out a new multivariate method.
 
 ## Installation
 
-`tidymvsim` is currently not on CRAN, but you can install it from github
+`holodeck` is currently not on CRAN, but you can install it from github
 with the following R code:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Aariq/tidymvsim")
+devtools::install_github("Aariq/holodeck")
 ```
 
 ## Load packages
 
-`tidymvsim` is built to work with `dplyr` functions, including the pipe
+`holodeck` is built to work with `dplyr` functions, including the pipe
 (`%>%`)
 
 ``` r
-library(tidymvsim)
+library(holodeck)
 library(dplyr)
 ```
 
@@ -124,7 +124,6 @@ missing values.
 
 ``` r
 library(purrr)
-#> Warning: package 'purrr' was built under R version 3.5.2
 ```
 
 ``` r
@@ -214,7 +213,6 @@ test.
 
 ``` r
 library(vegan)
-#> Warning: package 'vegan' was built under R version 3.5.2
 #> Loading required package: permute
 #> This is vegan 2.5-4
 ps <- 
