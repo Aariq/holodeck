@@ -95,15 +95,14 @@ df2
 
 # Visualizing correlation
 
-The [corrr](https://github.com/drsimonj/corrr) package provides tools for viusalizing correlation structures.
+The [corrr](https://github.com/drsimonj/corrr) package provides tools for viusalizing correlation structures and can calculate correlations with missing values.
 
 ```{r}
 library(corrr)
 x <-
   df2 %>%
   select(-factor) %>% 
-  correlate() %>% #creates a correlation dataframe
-  shave() #removes uppper triangle
+  correlate(diagonal = 1) #creates a correlation dataframe
 ```
 
 ```{r fig.width=6}
