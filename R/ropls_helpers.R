@@ -49,7 +49,7 @@ get_loadings <- function(.model){
 
 
 #' Get axis scores from models created by `ropls::opls()`
-#' Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictve and orthogonal axis scores for OPLS and OPLS-DA models.
+#' Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictive and orthogonal axis scores for OPLS and OPLS-DA models.
 #'
 #' @param model a model object created by `opls()`
 #'

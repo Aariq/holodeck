@@ -59,7 +59,7 @@ sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
 #' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.
 #' @param N Total number of observations/rows to simulate if `.data` is not supplied.
 #' @param p Number of variables to simulate.
-#' @param var Variance used to construct variance-covarinace matrix.
+#' @param var Variance used to construct variance-covariance matrix.
 #' @param cov Covariance used to construct variance-covarinace matrix.
 #' @param name An optional name to be appended to the column names in the output.
 #' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.

@@ -72,7 +72,7 @@ df <-
 df
 ```
 
-Now we could add a categorial variable, and some variables that discriminate between levels of our categorical variable
+Now we could add a catagorical variable, and some variables that discriminate between levels of our categorical variable
 
 ```{r}
 df1 <-
@@ -95,7 +95,7 @@ df2
 
 # Visualizing correlation
 
-The [corrr](https://github.com/drsimonj/corrr) package provides tools for viusalizing correlation structures and can calculate correlations with missing values.
+The [corrr](https://github.com/drsimonj/corrr) package provides tools for visualizing correlation structures and can calculate correlations with missing values.
 
 ```{r}
 library(corrr)
