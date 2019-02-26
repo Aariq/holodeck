@@ -34,7 +34,8 @@ plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subti
     theme_bw() +
     labs(title = "PCA")
   stats <- latex2exp::TeX(
-    paste0("$R^2(cumulative) = ", max(plotdata$model_stats$`R2X(cum)`, "$")))
+    paste0("$R^2(cumulative) = ", plotdata$model_stats$`R2X(cum)`,
+           "$ with ", plotdata$model_stats$pre, " PCs"))
 
   if(missing(annotate)){
     annotate = "caption"
