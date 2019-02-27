@@ -45,7 +45,7 @@ plot_pca <- function(ropls_pca, group_var = NULL, annotate = c("caption", "subti
          caption = p + labs(caption = stats),
          subtitle = p + ggtitle("PCA", subtitle = stats),
          none = p)
-  print(out)
+  out
 }
 
 
@@ -87,7 +87,7 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
                 caption = p + labs(caption = stats),
                 subtitle = p + ggtitle("PCA", subtitle = stats),
                 none = p)
-  print(out)
+  out
 }
 
 
@@ -128,7 +128,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
                 caption = p + labs(caption = stats),
                 subtitle = p + ggtitle("PCA", subtitle = stats),
                 none = p)
-  print(out)
+  out
 }
 
 
@@ -170,7 +170,7 @@ plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
                 caption = p + labs(caption = stats),
                 subtitle = p + ggtitle("PCA", subtitle = stats),
                 none = p)
-  print(out)
+  out
 }
 
 
@@ -211,5 +211,5 @@ plot_oplsda <- function(ropls_pls, annotate = c("caption", "subtitle")){
                 caption = p + labs(caption = stats),
                 subtitle = p + ggtitle("PCA", subtitle = stats),
                 none = p)
-  print(out)
+  out
 }

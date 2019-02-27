@@ -14,7 +14,7 @@ sim_covar(.data = NULL, N = NULL, p, var, cov, name = NA,
 
 \item{p}{Number of variables to simulate.}
 
-\item{var}{Variance used to construct variance-covarinace matrix.}
+\item{var}{Variance used to construct variance-covariance matrix.}
 
 \item{cov}{Covariance used to construct variance-covarinace matrix.}
 

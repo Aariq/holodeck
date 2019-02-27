@@ -3,7 +3,7 @@
 \name{get_scores}
 \alias{get_scores}
 \title{Get axis scores from models created by `ropls::opls()`
-Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictve and orthogonal axis scores for OPLS and OPLS-DA models.}
+Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictive and orthogonal axis scores for OPLS and OPLS-DA models.}
 \usage{
 get_scores(model)
 }
@@ -15,7 +15,7 @@ a dataframe
 }
 \description{
 Get axis scores from models created by `ropls::opls()`
-Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictve and orthogonal axis scores for OPLS and OPLS-DA models.
+Returns a dataframe of PC axis scores for PCA, predictive axis scores for PLS and PLS-DA, and predictive and orthogonal axis scores for OPLS and OPLS-DA models.
 }
 \examples{
 \dontrun{
