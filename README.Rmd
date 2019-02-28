@@ -29,116 +29,73 @@ devtools::install_github("Aariq/holodeck")
 
 ## Load packages
 
-`holodeck` is built to work with `dplyr` functions, including the pipe (` %>% `)
+`holodeck` is built to work with `dplyr` functions, including `group_by()` and the pipe (` %>% `). `purrr` is helpful for iterating simulated data.  `holodeck` also includes some helper functions to improve the interface between the `ropls` package and the tidyverse.  I'm also going to use `iheatmapr` to visualize the correlation structure of simulated data.
 
 ```{r example, message=FALSE, warning=FALSE}
 library(holodeck)
 library(dplyr)
+library(purrr)
+library(ropls)
 ```
 
-## Example 1: Investigating PCA
+## Example 1: Investigating PCA and PLS-DA
 
 Let's say we want to learn more about how principal component analysis (PCA) works.  Specifically, what matters more in terms of creating a principal component---variance or covariance of variables? To this end, you might create a dataframe with a few variables with high covariance and low variance and another set of variables with low covariance and high variance
+
+### Generate data
 
 ```{R}
 set.seed(925)
 df1 <- 
-  sim_covar(N = 20, p = 3, cov = 0.9, var = 1, name = "high_cov") %>%
-  sim_covar(p = 3, cov = 0.1, var = 2, name = "high_var") 
+  sim_covar(N = 20, p = 5, cov = 0.9, var = 1, name = "high_cov") %>%
+  sim_covar(p = 5, cov = 0.1, var = 2, name = "high_var") 
 ```
 
-Explore correlation structure visually.
+Explore covariance structure visually.  The diagonal is variance.
 
 ```{r}
-plot(df1)
+df1 %>% 
+  cov() %>%
+  heatmap(Rowv = NA, Colv = NA, margins = c(6,6), main = "Covariance")
+#for interactive heatmap, try iheatmapr package:
+  # iheatmap(row_labels = TRUE, col_labels = TRUE, name = "cov or var")
 ```
 
-And do PCA
+Now let's make this dataset a little more complex. We can add a factor variable, some variables that discriminate between the levels of that factor, and add some missing values.
 
 ```{r}
-df1.pca <- princomp(df1)
-loadings(df1.pca)
-biplot(df1.pca)
-```
-
-It looks like the variables with high covariance and low variance load most strongly on the first PC.
-
-## Example 2: Effect of missing data
-
-What's the effect of missing data on a statistical analysis? The `sim_missing()` function replaces a proportion of values with NA.  Let's see how it affects a PERMANOVA.
-
-### Create datasets
-
-We can chain several `sim_*` functions to quickly create a dataframe.
-
-```{r}
-df2 <- 
-  sim_cat(N = 25, n_groups = 3, name = "factor") %>% 
-  sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
+set.seed(501)
+df2 <-
+  df1 %>% 
+  sim_cat(n_groups = 3, name = "factor") %>% 
   group_by(factor) %>% 
-  sim_discr(p = 3, var = 1, cov = 0, group_means = c(-1.5, 0, 1.5), name  = "signal")
+  sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1.3, 0, 1.3), name = "discr") %>% 
+  sim_discr(p = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "discr2") %>% 
+  sim_missing(prop = 0.1) %>% 
+  ungroup()
 df2
 ```
 
-We can then use `map()` from the `purrr` package to create many randomly generated datasets using the same specifications, with and without missing values.
+
+### PCA
 
 ```{r}
-library(purrr)
+pca <- opls(select(df2, -factor), printL = FALSE, plotL = FALSE)
+  
+plot_pca(pca, df2$factor)
+
+get_loadings(pca) %>% 
+  arrange(desc(abs(p1)))
 ```
+
+It looks like PCA mostly picks up on the variables with high covariance, **not** the variables that discriminate among levels of `factor`.  This makes sesne, as PCA is an unsupervised analyis.
+
+### PLS-DA
 
 ```{r}
-set.seed(100)
-dfs <-
-  map(1:20, 
-      ~sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
-        sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
-        group_by(factor) %>% 
-        sim_discr(p = 3, var = 1, cov = 0, group_means = c(-0.5, 0, 0.5), name  = "signal") %>% 
-        ungroup())
+plsda <- opls(select(df2, -factor), df2$factor, printL = FALSE, plotL = FALSE, predI = 2)
+plot_plsda(plsda)
+get_VIP(plsda) %>% arrange(desc(VIP))
 ```
 
-### Simulate missing data
-
-We can now map the `sim_missing()` function to randomly introduce NAs to the datasets.
-
-```{r}
-set.seed(100)
-dfs.missing <-
-  map(dfs, ~sim_missing(., prop = 0.2))
-```
-
-And finally, deal with those NAs with multiple imputation with the `mice` package.
-
-```{r warning=FALSE}
-library(mice)
-# this might take a few seconds
-dfs.imputed <-
-  map(dfs.missing, ~mice(., printFlag = FALSE) %>% complete())
-```
-
-Here, we can compare an example dataset as original, with NAs, and imputed:
-
-```{r}
-head(dfs[[1]])
-head(dfs.missing[[1]])
-head(dfs.imputed[[1]])
-```
-
-### Analyze
-
-Then we could run PERMANOVAs on each dataset and compare the mean p-values to get an idea how how missing values affect the power of the test.
-
-```{r}
-library(vegan)
-ps <- 
-  map_dbl(dfs,
-          ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
-
-ps.imputed <- 
-  map_dbl(dfs.imputed,
-          ~adonis(select(.,-factor) ~ factor, data = ., method = "eu")$aov.tab$`Pr(>F)`[1])
-
-tibble(ps, ps.imputed) %>% 
-  summarize_all(mean, na.rm = TRUE)
-```
-
+PLS-DA, a supervised analysis, finds discrimination among groups and finds that the discriminating variables we generated are most responsible for those differences.
