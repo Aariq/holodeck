@@ -30,5 +30,6 @@ Suggests:
     covr,
     knitr,
     rmarkdown,
-    corrr
+    iheatmapr,
+    mice
 VignetteBuilder: knitr
