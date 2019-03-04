@@ -153,7 +153,7 @@ plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
   p <- ggplot(plotdata$scores, aes(x = p1, y = o1, color = y1)) +
     geom_point() +
     labs(x = paste0("P1 (", plotdata$axis_stats$R2X[1] * 100, "%)"),
-         y = paste0("P2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
+         y = paste0("O1 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
     scale_color_viridis_c() +
     theme_bw() +
     labs(title = "OPLSR")
