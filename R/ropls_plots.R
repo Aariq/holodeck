@@ -85,7 +85,7 @@ plot_plsda <- function(ropls_plsda, annotate = c("caption", "subtitle")){
 
   out <- switch(annotate,
                 caption = p + labs(caption = stats),
-                subtitle = p + ggtitle("PCA", subtitle = stats),
+                subtitle = p + ggtitle("PLS-DA", subtitle = stats),
                 none = p)
   out
 }
@@ -114,7 +114,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
          y = paste0("P2 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
     scale_color_viridis_c() +
     theme_bw() +
-    labs(title = "PLSR")
+    labs(title = "PLS")
   stats <- latex2exp::TeX(
     paste0("$R^{2}_{Y} = ", plotdata$model_stats$`R2Y(cum)`, "$; ",
            "$Q^{2} = ", plotdata$model_stats$`Q2(cum)`, "$; ",
@@ -126,7 +126,7 @@ plot_pls <- function(ropls_pls, annotate = c("caption", "subtitle")){
 
   out <- switch(annotate,
                 caption = p + labs(caption = stats),
-                subtitle = p + ggtitle("PCA", subtitle = stats),
+                subtitle = p + ggtitle("PLS", subtitle = stats),
                 none = p)
   out
 }
@@ -156,7 +156,7 @@ plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
          y = paste0("O1 (", plotdata$axis_stats$R2X[2] * 100, "%)")) +
     scale_color_viridis_c() +
     theme_bw() +
-    labs(title = "OPLSR")
+    labs(title = "OPLS")
   stats <- latex2exp::TeX(
     paste0("$R^{2}_{Y} = ", plotdata$model_stats$`R2Y(cum)`, "$; ",
            "$Q^{2} = ", plotdata$model_stats$`Q2(cum)`, "$; ",
@@ -168,7 +168,7 @@ plot_opls <- function(ropls_pls, annotate = c("caption", "subtitle")){
 
   out <- switch(annotate,
                 caption = p + labs(caption = stats),
-                subtitle = p + ggtitle("PCA", subtitle = stats),
+                subtitle = p + ggtitle("OPLS", subtitle = stats),
                 none = p)
   out
 }
@@ -209,7 +209,7 @@ plot_oplsda <- function(ropls_pls, annotate = c("caption", "subtitle")){
 
   out <- switch(annotate,
                 caption = p + labs(caption = stats),
-                subtitle = p + ggtitle("PCA", subtitle = stats),
+                subtitle = p + ggtitle("OPLS-DA", subtitle = stats),
                 none = p)
   out
 }
