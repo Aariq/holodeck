@@ -50,8 +50,8 @@ test_that("group_by() doesn't screw up sim_covar", {
 })
 
 test_that("sim_missing() works with grouped dataframes", {
-          expect_equal(diamonds %>% group_by(cut) %>% sim_missing(prop = 0.01, seed = 22),
-                       diamonds %>% sim_missing(prop = 0.01, seed = 22))
+          expect_equal(chickwts %>% group_by(feed) %>% sim_missing(prop = 0.01, seed = 22),
+                       chickwts %>% sim_missing(prop = 0.01, seed = 22))
   })
 
 context("check RNG is working as expected")
