@@ -27,14 +27,12 @@ devtools::install_github("Aariq/holodeck")
 
 `holodeck` is built to work with `dplyr` functions, including
 `group_by()` and the pipe (`%>%`). `purrr` is helpful for iterating
-simulated data. `holodeck` also includes some helper functions to
-improve the interface between the `ropls` package and the tidyverse. I’m
-also going to use `iheatmapr` to visualize the correlation structure of
-simulated data.
+simulated data. For these examples I’ll use `ropls` for PCA and PLS-DA.
 
 ``` r
 library(holodeck)
 library(dplyr)
+library(tibble)
 library(purrr)
 library(ropls)
 ```
@@ -121,17 +119,14 @@ df2
 ``` r
 pca <- opls(select(df2, -factor), printL = FALSE, plotL = FALSE)
   
-plot_pca(pca, df2$factor)
-```
+plot(pca, parAsColFcVn = df2$factor, typeVc = "x-score")
+#> Warning: Character 'parAsColFcVn' set to a factor
 
-<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
-
-``` r
-
-get_loadings(pca) %>% 
+getLoadingMN(pca) %>%
+  as_tibble(rownames = "variable") %>% 
   arrange(desc(abs(p1)))
 #> # A tibble: 20 x 4
-#>    Variable         p1       p2        p3
+#>    variable         p1       p2        p3
 #>    <chr>         <dbl>    <dbl>     <dbl>
 #>  1 high_cov_3  0.444   -0.0223  -0.0178  
 #>  2 high_cov_4  0.412    0.0233   0.0301  
@@ -164,15 +159,14 @@ analyis.
 
 ``` r
 plsda <- opls(select(df2, -factor), df2$factor, printL = FALSE, plotL = FALSE, predI = 2)
-plot_plsda(plsda)
-```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+plot(plsda, typeVc = "x-score")
 
-``` r
-get_VIP(plsda) %>% arrange(desc(VIP))
+getVipVn(plsda) %>% 
+  tibble::enframe(name = "variable", value = "VIP") %>% 
+  arrange(desc(VIP))
 #> # A tibble: 20 x 2
-#>    Variable     VIP
+#>    variable     VIP
 #>    <chr>      <dbl>
 #>  1 discr_5    1.76 
 #>  2 discr_2    1.64 

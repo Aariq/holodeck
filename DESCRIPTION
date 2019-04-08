@@ -18,10 +18,7 @@ Imports:
     MASS,
     purrr,
     rlang,
-    assertthat,
-    ropls,
-    ggplot2,
-    latex2exp
+    assertthat
 RoxygenNote: 6.1.1
 URL: https://github.com/Aariq/holodeck
 BugReports: https://github.com/Aariq/holodeck/issues
@@ -31,5 +28,8 @@ Suggests:
     knitr,
     rmarkdown,
     iheatmapr,
-    mice
+    mice,
+    ropls,
+    ggplot2
+
 VignetteBuilder: knitr

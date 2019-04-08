@@ -29,11 +29,12 @@ devtools::install_github("Aariq/holodeck")
 
 ## Load packages
 
-`holodeck` is built to work with `dplyr` functions, including `group_by()` and the pipe (` %>% `). `purrr` is helpful for iterating simulated data.  `holodeck` also includes some helper functions to improve the interface between the `ropls` package and the tidyverse.  I'm also going to use `iheatmapr` to visualize the correlation structure of simulated data.
+`holodeck` is built to work with `dplyr` functions, including `group_by()` and the pipe (` %>% `). `purrr` is helpful for iterating simulated data.  For these examples I'll use `ropls` for PCA and PLS-DA.
 
 ```{r example, message=FALSE, warning=FALSE}
 library(holodeck)
 library(dplyr)
+library(tibble)
 library(purrr)
 library(ropls)
 ```
@@ -82,9 +83,10 @@ df2
 ```{r}
 pca <- opls(select(df2, -factor), printL = FALSE, plotL = FALSE)
   
-plot_pca(pca, df2$factor)
+plot(pca, parAsColFcVn = df2$factor, typeVc = "x-score")
 
-get_loadings(pca) %>% 
+getLoadingMN(pca) %>%
+  as_tibble(rownames = "variable") %>% 
   arrange(desc(abs(p1)))
 ```
 
@@ -94,8 +96,12 @@ It looks like PCA mostly picks up on the variables with high covariance, **not**
 
 ```{r}
 plsda <- opls(select(df2, -factor), df2$factor, printL = FALSE, plotL = FALSE, predI = 2)
-plot_plsda(plsda)
-get_VIP(plsda) %>% arrange(desc(VIP))
+
+plot(plsda, typeVc = "x-score")
+
+getVipVn(plsda) %>% 
+  tibble::enframe(name = "variable", value = "VIP") %>% 
+  arrange(desc(VIP))
 ```
 
 PLS-DA, a supervised analysis, finds discrimination among groups and finds that the discriminating variables we generated are most responsible for those differences.

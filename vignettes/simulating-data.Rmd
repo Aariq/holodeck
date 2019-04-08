@@ -115,53 +115,9 @@ df1 %>%
 Values are higher for the discriminating variables because the `cov` and `var` arguments to `sim_discr()` only control the covariance and variance *within* groups.
 
 
-# Analyzing data
+## Example: Effect of missing data
 
-One reason you might want to simulate multivariate data used to test and compare a variety of statistical techniques. This package also contains some wrappers that help deal with model objects created by the `opls()` function from the `ropls` package. Refer to documentation on `opls()` for how to use it for PCA and PLS-DA models
-
-## Do PCA and PLS-DA
-
-```{r}
-pca <- opls(select(df2, -factor), plotL = FALSE, printL = FALSE)
-plsda <- opls(select(df2, -factor), df2$factor, plotL = FALSE, printL = FALSE, predI = 2)
-```
-
-After creating these models, we can create default plots using `plot_pca()` and `plot_plsda()` which use `ggplot2`.
-
-```{r fig.width=6}
-plot_pca(pca, group_var = df2$factor)
-```
-
-```{r fig.width=6}
-plot_plsda(plsda)
-```
-
-And we can use some accessor functions to get scores, loadings, and VIP scores (for PLS) as tibbles.
-
-**PCA**
-
-```{r}
-#pca scores and loadings
-get_scores(pca)
-get_loadings(pca) %>%
-  arrange(desc(abs(p1)))
-```
-
-**PLS_DA**
-
-```{r}
-get_scores(plsda)
-get_loadings(plsda) %>%
-  arrange(desc(abs(p1)))
-get_VIP(plsda) %>% 
-  arrange(desc(VIP))
-```
-
-
-
-## Example 2: Effect of missing data
-
-What's the effect of missing data on a statistical analysis? The `sim_missing()` function replaces a proportion of values with NA.  Let's see how it affects a PLS-DA analysis.
+One reason to simulate multivariate data is to test the effects of different properties of datasets on analysis results.  For example, what's the effect of missing data on a statistical analysis? The `sim_missing()` function replaces a proportion of values with NA.  Let's see how it affects a PLS-DA analysis.
 
 ### Create datasets
 
@@ -191,6 +147,8 @@ dfs <-
         sim_discr(p = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "signal2") %>% 
         ungroup())
 ```
+
+Alternatively, you could generate one large dataframe (many rows) and take subsets.  Either way, you know the "true" properties of the data and can compare to the results of the analyses you test.
 
 ### Simulate missing data
 
@@ -227,17 +185,17 @@ my_opls<- partial(opls, predI = 2, permI = 1, printL = FALSE, plotL = FALSE)
 plsda.q2 <- 
   map_dbl(dfs,
       ~my_opls(select(., -factor), .$factor) %>%
-        get_modelinfo() %>% .$model_stats %>% .$`Q2(cum)`)
+        getSummaryDF() %>% .$`Q2(cum)`)
 
 missing.q2 <-
   map_dbl(dfs.missing,
       ~my_opls(select(., -factor), .$factor) %>%
-        get_modelinfo() %>% .$model_stats %>% .$`Q2(cum)`)
+        getSummaryDF() %>% .$`Q2(cum)`)
 
 imputed.q2 <- 
   map_dbl(dfs.imputed,
       ~my_opls(select(., -factor), .$factor) %>%
-        get_modelinfo() %>% .$model_stats %>% .$`Q2(cum)`)
+        getSummaryDF() %>% .$`Q2(cum)`)
 ```
 
 ```{r}
@@ -247,4 +205,4 @@ tibble(plsda.q2, missing.q2, imputed.q2) %>%
   summarize_all(mean, na.rm = TRUE)
 ```
 
-It looks like, on average in this sample, the imputation by `mice` did a better job, at least with respect to the $Q^2$ statistic.
+It looks like, on average in this sample, the imputation by `mice` did slightly worse than the imputation done by `ropls`, at least with respect to the $Q^2$ statistic.
