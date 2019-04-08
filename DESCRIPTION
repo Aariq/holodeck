@@ -31,5 +31,4 @@ Suggests:
     mice,
     ropls,
     ggplot2
-
 VignetteBuilder: knitr
