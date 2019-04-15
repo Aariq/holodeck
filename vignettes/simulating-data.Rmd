@@ -45,19 +45,19 @@ To simulate multivariate data you need to start with a dataframe or a tibble.  O
 ```{r}
 df <- tibble(Y = rep(c("a", "b"), each = 5))
 
-df %>% sim_covar(p = 5, var = 1, cov = 0.5)
+df %>% sim_covar(n_vars = 5, var = 1, cov = 0.5)
 ```
 
 Optionally you can create a tibble with the `sim_covar()` or `sim_cat()` functions by providing them with the `N`  argument instead of `.data`.
 
 ```{r}
-sim_covar(N = 10, p = 5, var = 1, cov = 0.5)
+sim_covar(n_obs = 10, n_vars = 5, var = 1, cov = 0.5)
 ```
 
 `sim_cat()` is a rather simple wrapper that just creates a column of categorical data. Eventually, it will be expanded to allow creation of crossed and nested factors.
 
 ```{r}
-sim_cat(N = 10, n_groups = 2)
+sim_cat(n_obs = 10, n_groups = 2)
 ```
 
 `sim_discr()` simulates covarying data that differs in means between levels of some grouping variable.
@@ -65,7 +65,7 @@ sim_cat(N = 10, n_groups = 2)
 ```{r}
 df %>%
   group_by(Y) %>% 
-  sim_discr(p = 5, var = 1, cov = 0.1, group_means = c(1, -1))
+  sim_discr(n_vars = 5, var = 1, cov = 0.1, group_means = c(1, -1))
 ```
 
 
@@ -77,8 +77,8 @@ All of the `sim_*` functions (besides `sim_missing()`) take an optional name arg
 
 ```{r}
 df <-
-  sim_covar(N = 20, p = 5, var = 1, cov = 0.1, name = "low") %>% #5 variables with low covariance
-  sim_covar(p = 5, var = 1, cov = 0.8, name = "high")            #5 variables with high covariance
+  sim_covar(n_obs = 20, n_vars = 5, var = 1, cov = 0.1, name = "low") %>% #5 variables with low covariance
+  sim_covar(n_vars = 5, var = 1, cov = 0.8, name = "high")            #5 variables with high covariance
 ```
 
 Now we could add a catagorical variable, and some variables that discriminate between levels of our categorical variable
@@ -88,7 +88,7 @@ df1 <-
   df %>% 
   sim_cat(n_groups = 2, name = "factor") %>% 
   group_by(factor) %>% 
-  sim_discr(p = 5, var = 1, cov = 0.1, group_means = c(-1, 1), name = "discr") %>% 
+  sim_discr(n_vars = 5, var = 1, cov = 0.1, group_means = c(-1, 1), name = "discr") %>% 
   ungroup()
 ```
 
@@ -125,11 +125,11 @@ We can chain several `sim_*` functions to quickly create a dataframe.
 
 ```{r}
 df2 <- 
-  sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
-  sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
+  sim_cat(n_obs = 40, n_groups = 3, name = "factor") %>% 
+  sim_covar(n_vars = 3, var = 1, cov = 0.0, name = "noise") %>% 
   group_by(factor) %>% 
-  sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1, 0, 1), name  = "signal") %>%
-  sim_discr(p = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "signal2") %>% 
+  sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(-1, 0, 1), name  = "signal") %>%
+  sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "signal2") %>% 
   ungroup()
 df2
 ```
@@ -140,11 +140,11 @@ We can then use `map()` from the `purrr` package to create many randomly generat
 set.seed(100)
 dfs <-
   map(1:20, 
-      ~sim_cat(N = 40, n_groups = 3, name = "factor") %>% 
-        sim_covar(p = 3, var = 1, cov = 0.0, name = "noise") %>% 
+      ~sim_cat(n_obs = 40, n_groups = 3, name = "factor") %>% 
+        sim_covar(n_vars = 3, var = 1, cov = 0.0, name = "noise") %>% 
         group_by(factor) %>% 
-        sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1, 0, 1), name  = "signal") %>%
-        sim_discr(p = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "signal2") %>% 
+        sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(-1, 0, 1), name  = "signal") %>%
+        sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "signal2") %>% 
         ungroup())
 ```
 

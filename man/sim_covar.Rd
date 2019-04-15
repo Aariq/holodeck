@@ -4,15 +4,11 @@
 \alias{sim_covar}
 \title{Simulate co-varying variables}
 \usage{
-sim_covar(.data = NULL, N = NULL, p, var, cov, name = NA,
+sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA,
   seed = NA)
 }
 \arguments{
 \item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.}
-
-\item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
-
-\item{p}{Number of variables to simulate.}
 
 \item{var}{Variance used to construct variance-covariance matrix.}
 
@@ -21,6 +17,10 @@ sim_covar(.data = NULL, N = NULL, p, var, cov, name = NA,
 \item{name}{An optional name to be appended to the column names in the output.}
 
 \item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
+
+\item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
+
+\item{p}{Number of variables to simulate.}
 }
 \value{
 a tibble
@@ -30,8 +30,8 @@ Adds a group of variables (columns) with a given variance and covariance to a da
 }
 \examples{
 library(dplyr)
-sim_cat(N = 30, n_groups = 3) \%>\%
-sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
+sim_cat(n_obs = 30, n_groups = 3) \%>\%
+sim_covar(n_vars = 5, var = 1, cov = 0.5, name = "correlated")
 }
 \seealso{
 \code{\link{sim_cat}}, \code{\link{sim_discr}}

@@ -19,31 +19,31 @@
 #' @family multivariate normal functions
 #' @seealso \code{\link{sim_covar}}, \code{\link{sim_discr}}
 #' @examples
-#' df <- sim_cat(N = 30, n_groups = 3)
-sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
+#' df <- sim_cat(n_obs = 30, n_groups = 3)
+sim_cat <- function(.data = NULL, n_obs = NULL, n_groups, name = "group") {
   name <- sym(name)
   #assert that either .data or N is supplied, not neither nor both
-  if(is.null(.data) & is.null(N)) {
+  if(is.null(.data) & is.null(n_obs)) {
     stop("You must supply either '.data' or 'N'")
   }
-  if(!is.null(.data) & !is.null(N)) {
+  if(!is.null(.data) & !is.null(n_obs)) {
     stop("Please supply either '.data' or 'N', not both")
   }
   # if data is supplied, check that it's a dataframe and set N
-  if(is.null(N)) {
+  if(is.null(n_obs)) {
     assertthat::assert_that(is.data.frame(.data))
-    N <- nrow(.data)
+    n_obs <- nrow(.data)
   }
   ## Consider moving this check to sim_discr()
   #stopifnots for group size.  Groups should have at least 3 obserations, warn if less than 5.
-  if(N/n_groups < 3){
+  if(n_obs/n_groups < 3){
     stop("Not enough replicates per group")
   }
-  if(N/n_groups < 5){
+  if(n_obs/n_groups < 5){
     warning("Fewer than 5 replicates per group")
   }
   df <-
-    tibble(!!name := rep(letters[1:n_groups], length.out = N)) %>%
+    tibble(!!name := rep(letters[1:n_groups], length.out = n_obs)) %>%
     arrange(!!name)
   if(!is.null(.data)){
     df <- bind_cols(.data, df)
@@ -75,20 +75,20 @@ sim_cat <- function(.data = NULL, N = NULL, n_groups, name = "group") {
 #'
 #' @examples
 #' library(dplyr)
-#' sim_cat(N = 30, n_groups = 3) %>%
-#' sim_covar(p = 5, var = 1, cov = 0.5, name = "correlated")
+#' sim_cat(n_obs = 30, n_groups = 3) %>%
+#' sim_covar(n_vars = 5, var = 1, cov = 0.5, name = "correlated")
 
-sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA) {
-  if(is.null(.data) & is.null(N)) {
+sim_covar <- function(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA, seed = NA) {
+  if(is.null(.data) & is.null(n_obs)) {
     stop("You must supply either '.data' or 'N'")
   }
-  if(!is.null(.data) & !is.null(N)) {
+  if(!is.null(.data) & !is.null(n_obs)) {
     stop("Please supply either '.data' or 'N', not both")
   }
   # if data is supplied, check that it's a dataframe and set N
-  if(is.null(N)) {
+  if(is.null(n_obs)) {
     assertthat::assert_that(is.data.frame(.data))
-    N <- nrow(.data)
+    n_obs <- nrow(.data)
   }
   if(length(cov) != 1){
     stop("Error: length(cov) not equal to 1")
@@ -97,16 +97,16 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
     seed = as.integer(runif(1) * 10e6)
   }
 
-  S <- matrix(rep(cov, p^2), ncol = p) %>% set_diag(var)
+  S <- matrix(rep(cov, n_vars^2), ncol = n_vars) %>% set_diag(var)
 
   set.seed(seed)
-  sim_matrix <- MASS::mvrnorm(n = N, Sigma = S, mu = rep(0, p))
+  sim_matrix <- MASS::mvrnorm(n = n_obs, Sigma = S, mu = rep(0, n_vars))
 
   #set column names
   if(!is.na(name)){
-    colnames(sim_matrix) <- paste0(name, "_", 1:p)
+    colnames(sim_matrix) <- paste0(name, "_", 1:n_vars)
   } else {
-    colnames(sim_matrix) <- paste0("V", 1:p)
+    colnames(sim_matrix) <- paste0("V", 1:n_vars)
   }
 
   sim_data <- sim_matrix %>%
@@ -149,10 +149,10 @@ sim_covar <- function(.data = NULL, N = NULL, p, var, cov, name = NA, seed = NA)
 #'
 #' @examples
 #' library(dplyr)
-#' sim_cat(N = 30, n_groups = 3) %>%
+#' sim_cat(n_obs = 30, n_groups = 3) %>%
 #' group_by(group) %>%
-#' sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
-sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
+#' sim_discr(n_vars = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
+sim_discr <- function(.data, n_vars, var, cov, group_means, name = NA, seed = NA){
   if(is.na(seed)){
     seed = as.integer(runif(1) * 10e6)
   }
@@ -191,7 +191,7 @@ sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
   #list of vcov matrices for each group
   S.list <-
     purrr::map2(Cov, Var,
-                ~matrix(rep(.x, p^2), ncol = p) %>%
+                ~matrix(rep(.x, n_vars^2), ncol = n_vars) %>%
                   set_diag(.y))
   #list of all params for pmap_df()
   l <- list(S = S.list, n = len_groups, mu = group_means)
@@ -202,12 +202,12 @@ sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
     pmap_df(l, .f = function(S, n, mu){
       MASS::mvrnorm(n = n,
                     Sigma = S,
-                    mu = rep(mu, p)) %>%
+                    mu = rep(mu, n_vars)) %>%
         as.data.frame
     })
 
   if(!is.na(name)){
-    colnames(sim_data) <- paste0(name, "_", 1:p)
+    colnames(sim_data) <- paste0(name, "_", 1:n_vars)
   }
   new_df <- bind_cols(.data, sim_data)
   return(new_df)
@@ -230,8 +230,8 @@ sim_discr <- function(.data, p, var, cov, group_means, name = NA, seed = NA){
 #'
 #' @examples
 #' library(dplyr)
-#' df <- sim_cat(N = 10, n_groups = 2) %>%
-#' sim_covar(p = 10, var = 1, cov = 0.5) %>%
+#' df <- sim_cat(n_obs = 10, n_groups = 2) %>%
+#' sim_covar(n_vars = 10, var = 1, cov = 0.5) %>%
 #' sim_missing(0.05)
 sim_missing <-
   function(.data, prop, seed = NA){ #consider adding vars= to specify what columns.  Pass to select()

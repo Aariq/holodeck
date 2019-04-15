@@ -51,8 +51,8 @@ high variance
 ``` r
 set.seed(925)
 df1 <- 
-  sim_covar(N = 20, p = 5, cov = 0.9, var = 1, name = "high_cov") %>%
-  sim_covar(p = 5, cov = 0.1, var = 2, name = "high_var") 
+  sim_covar(n_obs = 20, n_vars = 5, cov = 0.9, var = 1, name = "high_cov") %>%
+  sim_covar(n_vars = 5, cov = 0.1, var = 2, name = "high_var") 
 ```
 
 Explore covariance structure visually. The diagonal is variance.
@@ -80,8 +80,8 @@ df2 <-
   df1 %>% 
   sim_cat(n_groups = 3, name = "factor") %>% 
   group_by(factor) %>% 
-  sim_discr(p = 5, var = 1, cov = 0, group_means = c(-1.3, 0, 1.3), name = "discr") %>% 
-  sim_discr(p = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "discr2") %>% 
+  sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(-1.3, 0, 1.3), name = "discr") %>% 
+  sim_discr(n_vars = 5, var = 1, cov = 0, group_means = c(0, 0.5, 1), name = "discr2") %>% 
   sim_missing(prop = 0.1) %>% 
   ungroup()
 df2

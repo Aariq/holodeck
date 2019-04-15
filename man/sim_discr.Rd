@@ -4,12 +4,10 @@
 \alias{sim_discr}
 \title{Simulate co-varying variables with different means by group}
 \usage{
-sim_discr(.data, p, var, cov, group_means, name = NA, seed = NA)
+sim_discr(.data, n_vars, var, cov, group_means, name = NA, seed = NA)
 }
 \arguments{
 \item{.data}{A dataframe containing a grouping variable column.}
-
-\item{p}{Number of variables to simulate.}
 
 \item{var}{Variance used to construct variance-covarinace matrix.}
 
@@ -20,6 +18,8 @@ sim_discr(.data, p, var, cov, group_means, name = NA, seed = NA)
 \item{name}{An optional name to be appended to the column names in the output.}
 
 \item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
+
+\item{p}{Number of variables to simulate.}
 }
 \value{
 a tibble
@@ -29,9 +29,9 @@ To-do: make this work with `dplyr::group_by()` instead of `group =`
 }
 \examples{
 library(dplyr)
-sim_cat(N = 30, n_groups = 3) \%>\%
+sim_cat(n_obs = 30, n_groups = 3) \%>\%
 group_by(group) \%>\%
-sim_discr(p = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
+sim_discr(n_vars = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "descr")
 }
 \seealso{
 \code{\link{sim_cat}}, \code{\link{sim_covar}}

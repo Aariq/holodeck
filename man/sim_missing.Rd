@@ -21,7 +21,7 @@ Takes a data frame and randomly replaces a user-supplied proportion of values wi
 }
 \examples{
 library(dplyr)
-df <- sim_cat(N = 10, n_groups = 2) \%>\%
-sim_covar(p = 10, var = 1, cov = 0.5) \%>\%
+df <- sim_cat(n_obs = 10, n_groups = 2) \%>\%
+sim_covar(n_vars = 10, var = 1, cov = 0.5) \%>\%
 sim_missing(0.05)
 }
