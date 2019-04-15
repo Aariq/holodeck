@@ -4,18 +4,10 @@
 \name{holodeck}
 \alias{holodeck}
 \alias{holodeck-package}
-\title{holodeck: A package for simulating multivariate datasets (and some wrappers for the `ropls` package)}
+\title{holodeck: A package for simulating multivariate datasets}
 \description{
-The `holodeck` package contains two categories of functions.  Those starting with `sim_` are aimed at simulating multivariate data.  The package also provides some wrappers to the `ropls` package for extracting data from `opls()` models in a tidy framework and some default plots for `opls()` models that use `ggplot2`.
+The `holodeck` package contains functions for creating "chunks" of variables with different degrees of co-variance (collinearity) and discrimination among groups (i.e. levels of a categorical variable).
 }
 \details{
 What make it 'tidy'?  All `sim_*` functions accept dataframes or tibbles as their first argument and return tibbles, meaning they work with the pipe operator (`%>%`) from the `dplyr` package.
 }
-\section{`sim_*` functions}{
-NA
-}
-
-\section{Interfacing with the `ropls` package}{
-NA
-}
-
