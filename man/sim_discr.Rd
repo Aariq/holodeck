@@ -9,6 +9,8 @@ sim_discr(.data, n_vars, var, cov, group_means, name = NA, seed = NA)
 \arguments{
 \item{.data}{A dataframe containing a grouping variable column.}
 
+\item{n_vars}{Number of variables to simulate.}
+
 \item{var}{Variance used to construct variance-covarinace matrix.}
 
 \item{cov}{Covariance used to construct variance-covarinace matrix.}
@@ -18,8 +20,6 @@ sim_discr(.data, n_vars, var, cov, group_means, name = NA, seed = NA)
 \item{name}{An optional name to be appended to the column names in the output.}
 
 \item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
-
-\item{p}{Number of variables to simulate.}
 }
 \value{
 a tibble

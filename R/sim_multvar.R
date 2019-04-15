@@ -4,9 +4,9 @@
 #'
 #' - Make this optionally create multiple categorical variables as being nested or crossed or random
 #'
-#' @description This is a simple wrapper that creates a tibble of length `N` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
-#' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.
-#' @param N Total number of observations/rows to simulate if `.data` is not supplied.
+#' @description This is a simple wrapper that creates a tibble of length `n_obs` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
+#' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `n_obs` must be supplied.
+#' @param n_obs Total number of observations/rows to simulate if `.data` is not supplied.
 #' @param n_groups How many groups or treatments to simulate.
 #' @param name The column name for the grouping variable.  Defaults to "group".
 #'
@@ -56,9 +56,9 @@ sim_cat <- function(.data = NULL, n_obs = NULL, n_groups, name = "group") {
 #'
 #' Adds a group of variables (columns) with a given variance and covariance to a data frame or tibble
 #'
-#' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.
-#' @param N Total number of observations/rows to simulate if `.data` is not supplied.
-#' @param p Number of variables to simulate.
+#' @param .data An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `n_obs` must be supplied.
+#' @param n_obs Total number of observations/rows to simulate if `.data` is not supplied.
+#' @param n_vars Number of variables to simulate.
 #' @param var Variance used to construct variance-covariance matrix.
 #' @param cov Covariance used to construct variance-covarinace matrix.
 #' @param name An optional name to be appended to the column names in the output.
@@ -128,7 +128,7 @@ sim_covar <- function(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA, s
 #' To-do: make this work with `dplyr::group_by()` instead of `group =`
 #'
 #' @param .data A dataframe containing a grouping variable column.
-#' @param p Number of variables to simulate.
+#' @param n_vars Number of variables to simulate.
 #' @param var Variance used to construct variance-covarinace matrix.
 #' @param cov Covariance used to construct variance-covarinace matrix.
 #' @param group_means A vector of the same length as the number of grouping variables.

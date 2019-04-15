@@ -8,7 +8,11 @@ sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA,
   seed = NA)
 }
 \arguments{
-\item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.}
+\item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `n_obs` must be supplied.}
+
+\item{n_obs}{Total number of observations/rows to simulate if `.data` is not supplied.}
+
+\item{n_vars}{Number of variables to simulate.}
 
 \item{var}{Variance used to construct variance-covariance matrix.}
 
@@ -17,10 +21,6 @@ sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA,
 \item{name}{An optional name to be appended to the column names in the output.}
 
 \item{seed}{An optional seed for random number generation.  If `NA` (default) a random seed will be used.}
-
-\item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
-
-\item{p}{Number of variables to simulate.}
 }
 \value{
 a tibble

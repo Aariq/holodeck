@@ -7,19 +7,19 @@
 sim_cat(.data = NULL, n_obs = NULL, n_groups, name = "group")
 }
 \arguments{
-\item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `N` must be supplied.}
+\item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `n_obs` must be supplied.}
+
+\item{n_obs}{Total number of observations/rows to simulate if `.data` is not supplied.}
 
 \item{n_groups}{How many groups or treatments to simulate.}
 
 \item{name}{The column name for the grouping variable.  Defaults to "group".}
-
-\item{N}{Total number of observations/rows to simulate if `.data` is not supplied.}
 }
 \value{
 a tibble
 }
 \description{
-This is a simple wrapper that creates a tibble of length `N` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
+This is a simple wrapper that creates a tibble of length `n_obs` with a single column `groups`.  It will warn if there are fewer than three replicates per group.
 }
 \details{
 To-do:
