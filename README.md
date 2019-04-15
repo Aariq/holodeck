@@ -152,8 +152,8 @@ getLoadingMN(pca) %>%
 
 It looks like PCA mostly picks up on the variables with high covariance,
 **not** the variables that discriminate among levels of `factor`. This
-makes sesne, as PCA is an unsupervised
-analyis.
+makes sense, as PCA is an unsupervised
+analysis.
 
 ### PLS-DA
 

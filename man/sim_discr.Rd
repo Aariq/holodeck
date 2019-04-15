@@ -11,9 +11,9 @@ sim_discr(.data, n_vars, var, cov, group_means, name = NA, seed = NA)
 
 \item{n_vars}{Number of variables to simulate.}
 
-\item{var}{Variance used to construct variance-covarinace matrix.}
+\item{var}{Variance used to construct variance-covariance matrix.}
 
-\item{cov}{Covariance used to construct variance-covarinace matrix.}
+\item{cov}{Covariance used to construct variance-covariance matrix.}
 
 \item{group_means}{A vector of the same length as the number of grouping variables.}
 

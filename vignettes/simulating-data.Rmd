@@ -17,7 +17,7 @@ knitr::opts_chunk$set(
 ```
 
 
-To simulate co-varying multivariate normal data one can use the `mvrnorm()` function from the `MASS` package. However, this requires input of a covariance matrix and returns a matrix.  The `holodeck` package provides functions that are "tidy" in the sense that they work with dataframes and the pipe operator (`%>%`). It also includes some functions that provide an interface between the BioConductor package `ropls` and the tidyverse.
+To simulate co-varying multivariate normal data one can use the `mvrnorm()` function from the `MASS` package. However, this requires input of a covariance matrix and returns a matrix.  The `holodeck` package provides functions that are "tidy" in the sense that they work with dataframes and the pipe operator (`%>%`). It also includes some functions that provide an interface between the Bioconductor package `ropls` and the tidyverse.
 
 # Packages
 
@@ -81,7 +81,7 @@ df <-
   sim_covar(n_vars = 5, var = 1, cov = 0.8, name = "high")            #5 variables with high covariance
 ```
 
-Now we could add a catagorical variable, and some variables that discriminate between levels of our categorical variable
+Now we could add a categorical variable, and some variables that discriminate between levels of our categorical variable
 
 ```{r}
 df1 <-

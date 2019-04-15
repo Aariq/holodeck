@@ -60,7 +60,7 @@ sim_cat <- function(.data = NULL, n_obs = NULL, n_groups, name = "group") {
 #' @param n_obs Total number of observations/rows to simulate if `.data` is not supplied.
 #' @param n_vars Number of variables to simulate.
 #' @param var Variance used to construct variance-covariance matrix.
-#' @param cov Covariance used to construct variance-covarinace matrix.
+#' @param cov Covariance used to construct variance-covariance matrix.
 #' @param name An optional name to be appended to the column names in the output.
 #' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.
 #'
@@ -129,8 +129,8 @@ sim_covar <- function(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA, s
 #'
 #' @param .data A dataframe containing a grouping variable column.
 #' @param n_vars Number of variables to simulate.
-#' @param var Variance used to construct variance-covarinace matrix.
-#' @param cov Covariance used to construct variance-covarinace matrix.
+#' @param var Variance used to construct variance-covariance matrix.
+#' @param cov Covariance used to construct variance-covariance matrix.
 #' @param group_means A vector of the same length as the number of grouping variables.
 #' @param name An optional name to be appended to the column names in the output.
 #' @param seed An optional seed for random number generation.  If `NA` (default) a random seed will be used.

@@ -16,7 +16,7 @@ sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA,
 
 \item{var}{Variance used to construct variance-covariance matrix.}
 
-\item{cov}{Covariance used to construct variance-covarinace matrix.}
+\item{cov}{Covariance used to construct variance-covariance matrix.}
 
 \item{name}{An optional name to be appended to the column names in the output.}
 
