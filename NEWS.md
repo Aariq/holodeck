@@ -2,7 +2,7 @@
 
 * Changed argument names. (`p` -> `n_vars`, `N` -> `n_obs`)
 * Removed helpers/wrappers to the `ropls` package.  These can now be found as part of https://github.com/Aariq/chemhelper
-* Actually ready for CRAN submission
+* Now available on CRAN!
 
 # holodeck 0.1.0
 

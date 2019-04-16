@@ -2,7 +2,11 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 [![Build
-Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-ci.org/Aariq/holodeck)[![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck)[![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376)
+Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-ci.org/Aariq/holodeck)
+[![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck)
+[![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376)
+[![CRAN](https://www.r-pkg.org/badges/version/holodeck)](https://cran.r-project.org/web/packages/holodeck/index.html)
+<!--![downloads](http://cranlogs.r-pkg.org/badges/grand-total/holodeck) -->
 
 # holodeck: A Tidy Interface For Simulating Multivariate Data
 
@@ -15,8 +19,13 @@ sanity check when trying out a new multivariate method.
 
 ## Installation
 
-`holodeck` is currently not on CRAN, but you can install it from github
-with the following R code:
+From CRAN:
+
+``` r
+install.packages("holodeck)
+```
+
+Development version:
 
 ``` r
 # install.packages("devtools")
