@@ -5,7 +5,8 @@ Authors@R:
     person(given = "Eric",
            family = "Scott",
            role = c("aut", "cre"),
-           email = "scottericr@gmail.com")
+           email = "scottericr@gmail.com",
+           orcid = "0000-0002-7430-7879")
 Description: Provides pipe-friendly (%>%) functions to create simulated multivariate data sets
     with groups of variables with different degrees of variance, covariance, and effect size. 
 License: MIT + file LICENSE
