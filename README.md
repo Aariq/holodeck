@@ -10,7 +10,7 @@ Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/Aariq/holodeck?branch=master&svg=true)](https://ci.appveyor.com/project/Aariq/holodeck)
 
-# holodeck: A Tidy Interface For Simulating Multivariate Data
+# holodeck 0.2.1: A Tidy Interface For Simulating Multivariate Data
 
 `holodeck` allows quick and simple creation of simulated multivariate
 data with variables that co-vary or discriminate between levels of a

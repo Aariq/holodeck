@@ -1,9 +1,9 @@
 ## Test Environments
 
-* local OS X install, R 3.5.3
+* local OS X install, R 3.6.1
 * travis CI build passing
-* winbuilder passing
-* R-hub passing (On Linux only, not windows due to problems installing bioconductor dependency `ropls`)
+* appveyor build passing
+* R-hub passing
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
