@@ -4,6 +4,7 @@
 * travis CI build passing
 * appveyor build passing
 * R-hub passing
+* win-builder passing
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.
