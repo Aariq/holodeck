@@ -53,16 +53,16 @@ test_that("no grouping variable causes sim_discr to error", {
   )
 })
 
-test_that("group_by() doesn't screw up sim_covar", {
+test_that("sim_covar() works the same on grouped data frames", {
   df <- sim_cat(n_obs =  10, n_groups = 2)
-  expect_equal(
+  expect_equivalent(
     df %>% sim_covar(n_vars =  10, var = 1, cov = 0.5, seed = 10),
     df %>% group_by(group) %>% sim_covar(n_vars =  10, var = 1, cov = 0.5, seed = 10)
     )
 })
 
-test_that("sim_missing() works with grouped dataframes", {
-  expect_equal(
+test_that("sim_missing() works the same with grouped dataframes", {
+  expect_equivalent(
     chickwts %>% group_by(feed) %>% sim_missing(prop = 0.01, seed = 22),
     chickwts %>% sim_missing(prop = 0.01, seed = 22))
   })
