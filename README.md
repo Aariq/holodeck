@@ -28,8 +28,8 @@ install.packages("holodeck)
 Development version:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("Aariq/holodeck")
+# install.packages("remotes")
+remotes::install_github("Aariq/holodeck")
 ```
 
 ## Load packages
@@ -69,15 +69,10 @@ Explore covariance structure visually. The diagonal is variance.
 ``` r
 df1 %>% 
   cov() %>%
-  heatmap(Rowv = NA, Colv = NA, margins = c(6,6), main = "Covariance")
+  heatmap(Rowv = NA, Colv = NA, symm = TRUE, margins = c(6,6), main = "Covariance")
 ```
 
 <img src="man/figures/README-unnamed-chunk-2-1.png" width="100%" />
-
-``` r
-#for interactive heatmap, try iheatmapr package:
-  # iheatmap(row_labels = TRUE, col_labels = TRUE, name = "cov or var")
-```
 
 Now let’s make this dataset a little more complex. We can add a factor
 variable, some variables that discriminate between the levels of that
@@ -101,22 +96,22 @@ df2
 #>  2 a          -1.50    -1.65       NA         -1.93       -1.27      1.00  
 #>  3 a           1.13     0.655       0.980      1.41        0.345    -1.90  
 #>  4 a           0.982    0.740       1.16       1.14        0.866     1.71  
-#>  5 a          -0.773   -1.31       -1.22      -1.21       -1.25     -0.576 
-#>  6 a           0.302   NA          -0.309      0.0725      0.725     2.25  
-#>  7 a          NA        0.00163     0.0596    -0.542      -0.269     2.87  
-#>  8 b           2.16     2.47        1.38      NA          NA         0.146 
-#>  9 b          NA       NA          -0.529     -0.842      -1.04     NA     
+#>  5 a          -0.773   NA          -1.22      -1.21       -1.25     -0.576 
+#>  6 a           0.302    0.130      -0.309      0.0725     NA        NA     
+#>  7 a          -0.117    0.00163     0.0596    -0.542      -0.269     2.87  
+#>  8 b           2.16     2.47       NA          1.62       NA         0.146 
+#>  9 b          -0.268   -0.509      -0.529     -0.842      -1.04     NA     
 #> 10 b           0.609    0.195       0.720      0.930       0.595     0.0765
-#> 11 b           1.81     1.15        1.43       1.09        1.39     -0.927 
+#> 11 b           1.81    NA           1.43       1.09        1.39     -0.927 
 #> 12 b           0.954    0.234       0.247      0.248       0.751     2.77  
-#> 13 b          -1.03    -1.24       -1.70      -1.27       -1.64      1.34  
-#> 14 b          -0.180   NA           0.177      0.433      NA         1.20  
+#> 13 b          -1.03    -1.24       -1.70      NA          -1.64      1.34  
+#> 14 b          -0.180    0.380       0.177      0.433       0.550     1.20  
 #> 15 c          -0.214   -0.390      -0.476     -0.878      -0.328     3.18  
-#> 16 c           0.827    0.556       0.620      0.491       0.814     1.91  
-#> 17 c          -0.399   -0.862      -0.385     -0.935      NA        -0.787 
-#> 18 c          -1.09    NA          -0.720     -1.88       -1.76     -1.76  
-#> 19 c          -0.181   -0.155      -0.774      0.0395     NA         0.741 
-#> 20 c           0.882    0.366       0.758      1.24        0.838     0.182 
+#> 16 c           0.827    0.556       0.620      0.491      NA         1.91  
+#> 17 c          -0.399   -0.862      -0.385     -0.935      -0.802    -0.787 
+#> 18 c          -1.09    -1.32       -0.720     NA          -1.76     -1.76  
+#> 19 c          -0.181   -0.155      -0.774      0.0395     -0.770     0.741 
+#> 20 c           0.882   NA           0.758      1.24        0.838     0.182 
 #> # … with 14 more variables: high_var_2 <dbl>, high_var_3 <dbl>,
 #> #   high_var_4 <dbl>, high_var_5 <dbl>, discr_1 <dbl>, discr_2 <dbl>,
 #> #   discr_3 <dbl>, discr_4 <dbl>, discr_5 <dbl>, discr2_1 <dbl>,
@@ -127,36 +122,43 @@ df2
 
 ``` r
 pca <- opls(select(df2, -factor), printL = FALSE, plotL = FALSE)
+#> Warning: 'printL' argument is deprecated; use 'info.txtC' instead
+#> Warning: 'plotL' argument is deprecated; use 'fig.pdfC' instead
   
 plot(pca, parAsColFcVn = df2$factor, typeVc = "x-score")
 #> Warning: Character 'parAsColFcVn' set to a factor
+```
+
+<img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
+
+``` r
 
 getLoadingMN(pca) %>%
   as_tibble(rownames = "variable") %>% 
   arrange(desc(abs(p1)))
 #> # A tibble: 20 x 4
-#>    variable         p1       p2        p3
-#>    <chr>         <dbl>    <dbl>     <dbl>
-#>  1 high_cov_3  0.444   -0.0223  -0.0178  
-#>  2 high_cov_4  0.412    0.0233   0.0301  
-#>  3 high_cov_1  0.403    0.0335  -0.0248  
-#>  4 high_cov_5  0.389    0.00518 -0.00792 
-#>  5 high_cov_2  0.372    0.00949 -0.000838
-#>  6 discr2_1    0.225   -0.0295   0.487   
-#>  7 high_var_2 -0.201   -0.140   -0.0215  
-#>  8 discr_1    -0.180   -0.309    0.0888  
-#>  9 discr2_4    0.124   -0.230   -0.235   
-#> 10 discr_5     0.121   -0.418   -0.00171 
-#> 11 high_var_3  0.121    0.0872  -0.208   
-#> 12 discr_4    -0.0761  -0.402    0.0376  
-#> 13 high_var_5 -0.0535  -0.00698 -0.393   
-#> 14 high_var_4  0.0457  -0.110   -0.544   
-#> 15 discr2_3    0.0330  -0.198   -0.00447 
-#> 16 discr_2     0.0207  -0.373    0.111   
-#> 17 high_var_1 -0.0199   0.0715  -0.0182  
-#> 18 discr2_2   -0.00666  0.182   -0.419   
-#> 19 discr2_5    0.00402 -0.324   -0.0749  
-#> 20 discr_3     0.00217 -0.389   -0.0967
+#>    variable         p1      p2       p3
+#>    <chr>         <dbl>   <dbl>    <dbl>
+#>  1 high_cov_1  0.377    0.194   0.0800 
+#>  2 high_cov_4  0.375    0.215   0.0202 
+#>  3 high_cov_3  0.368    0.225   0.133  
+#>  4 high_cov_5  0.362    0.186  -0.0539 
+#>  5 high_cov_2  0.348    0.227   0.0108 
+#>  6 discr_1    -0.306    0.219   0.0135 
+#>  7 discr2_1    0.290    0.0895 -0.322  
+#>  8 discr_4    -0.220    0.329  -0.120  
+#>  9 high_var_3  0.169   -0.142   0.184  
+#> 10 discr_3    -0.157    0.324  -0.176  
+#> 11 discr2_5   -0.153    0.242   0.318  
+#> 12 discr_2    -0.116    0.350  -0.210  
+#> 13 discr2_4   -0.0572   0.212   0.292  
+#> 14 discr2_2    0.0518  -0.133  -0.0374 
+#> 15 discr2_3   -0.0513   0.0717  0.00649
+#> 16 high_var_2 -0.0512  -0.0938 -0.442  
+#> 17 discr_5    -0.0448   0.424  -0.0118 
+#> 18 high_var_4 -0.0236   0.220   0.0444 
+#> 19 high_var_5  0.00619  0.0503 -0.434  
+#> 20 high_var_1 -0.00483 -0.0231 -0.414
 ```
 
 It looks like PCA mostly picks up on the variables with high covariance,
@@ -168,8 +170,15 @@ analysis.
 
 ``` r
 plsda <- opls(select(df2, -factor), df2$factor, printL = FALSE, plotL = FALSE, predI = 2)
+#> Warning: 'printL' argument is deprecated; use 'info.txtC' instead
+#> Warning: 'plotL' argument is deprecated; use 'fig.pdfC' instead
 
 plot(plsda, typeVc = "x-score")
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+``` r
 
 getVipVn(plsda) %>% 
   tibble::enframe(name = "variable", value = "VIP") %>% 
@@ -177,26 +186,26 @@ getVipVn(plsda) %>%
 #> # A tibble: 20 x 2
 #>    variable     VIP
 #>    <chr>      <dbl>
-#>  1 discr_5    1.76 
-#>  2 discr_2    1.64 
-#>  3 discr_4    1.58 
-#>  4 discr_3    1.50 
-#>  5 discr_1    1.30 
-#>  6 discr2_5   1.16 
-#>  7 discr2_4   1.05 
-#>  8 high_cov_2 0.995
-#>  9 high_var_5 0.989
-#> 10 high_cov_1 0.872
-#> 11 discr2_3   0.819
-#> 12 discr2_2   0.727
-#> 13 high_var_2 0.680
-#> 14 high_var_3 0.494
-#> 15 discr2_1   0.469
-#> 16 high_cov_3 0.450
-#> 17 high_cov_4 0.406
-#> 18 high_var_4 0.203
-#> 19 high_var_1 0.202
-#> 20 high_cov_5 0.105
+#>  1 discr_5    1.73 
+#>  2 discr_2    1.66 
+#>  3 discr_4    1.56 
+#>  4 discr_3    1.51 
+#>  5 discr_1    1.46 
+#>  6 discr2_5   1.06 
+#>  7 discr2_3   0.986
+#>  8 discr2_4   0.935
+#>  9 high_cov_4 0.817
+#> 10 high_cov_2 0.749
+#> 11 high_cov_1 0.734
+#> 12 high_var_3 0.725
+#> 13 discr2_2   0.702
+#> 14 high_var_4 0.697
+#> 15 high_cov_5 0.671
+#> 16 discr2_1   0.629
+#> 17 high_cov_3 0.328
+#> 18 high_var_1 0.327
+#> 19 high_var_5 0.276
+#> 20 high_var_2 0.199
 ```
 
 PLS-DA, a supervised analysis, finds discrimination among groups and

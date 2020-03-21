@@ -28,8 +28,8 @@ install.packages("holodeck)
 
 Development version:
 ``` r
-# install.packages("devtools")
-devtools::install_github("Aariq/holodeck")
+# install.packages("remotes")
+remotes::install_github("Aariq/holodeck")
 ```
 
 ## Load packages
@@ -62,9 +62,7 @@ Explore covariance structure visually.  The diagonal is variance.
 ```{r}
 df1 %>% 
   cov() %>%
-  heatmap(Rowv = NA, Colv = NA, margins = c(6,6), main = "Covariance")
-#for interactive heatmap, try iheatmapr package:
-  # iheatmap(row_labels = TRUE, col_labels = TRUE, name = "cov or var")
+  heatmap(Rowv = NA, Colv = NA, symm = TRUE, margins = c(6,6), main = "Covariance")
 ```
 
 Now let's make this dataset a little more complex. We can add a factor variable, some variables that discriminate between the levels of that factor, and add some missing values.
