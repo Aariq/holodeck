@@ -1,3 +1,7 @@
+# holodeck 0.2.1
+
+* Removed `iheatmapr` and `ropls` code from vignette (for now) because of compatibility issues with newer version of R.
+
 # holodeck 0.2.0
 
 * Changed argument names. (`p` -> `n_vars`, `N` -> `n_obs`)
