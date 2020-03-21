@@ -7,6 +7,8 @@ Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-
 [![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376)
 [![CRAN](https://www.r-pkg.org/badges/version/holodeck)](https://cran.r-project.org/web/packages/holodeck/index.html)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/holodeck)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/Aariq/holodeck?branch=master&svg=true)](https://ci.appveyor.com/project/Aariq/holodeck)
 
 # holodeck: A Tidy Interface For Simulating Multivariate Data
 
