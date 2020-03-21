@@ -4,8 +4,7 @@
 \alias{sim_covar}
 \title{Simulate co-varying variables}
 \usage{
-sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA,
-  seed = NA)
+sim_covar(.data = NULL, n_obs = NULL, n_vars, var, cov, name = NA, seed = NA)
 }
 \arguments{
 \item{.data}{An optional dataframe.  If a dataframe is supplied, simulated categorical data will be added to the dataframe. Either `.data` or `n_obs` must be supplied.}
@@ -36,7 +35,8 @@ sim_covar(n_vars = 5, var = 1, cov = 0.5, name = "correlated")
 \seealso{
 \code{\link{sim_cat}}, \code{\link{sim_discr}}
 
-Other multivariate normal functions: \code{\link{sim_cat}},
-  \code{\link{sim_discr}}
+Other multivariate normal functions: 
+\code{\link{sim_cat}()},
+\code{\link{sim_discr}()}
 }
 \concept{multivariate normal functions}

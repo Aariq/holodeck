@@ -3,7 +3,6 @@
 \docType{package}
 \name{holodeck}
 \alias{holodeck}
-\alias{holodeck-package}
 \title{holodeck: A package for simulating multivariate datasets}
 \description{
 The `holodeck` package contains functions for creating "chunks" of variables with different degrees of co-variance (collinearity) and discrimination among groups (i.e. levels of a categorical variable).

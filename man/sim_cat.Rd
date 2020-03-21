@@ -32,7 +32,8 @@ df <- sim_cat(n_obs = 30, n_groups = 3)
 \seealso{
 \code{\link{sim_covar}}, \code{\link{sim_discr}}
 
-Other multivariate normal functions: \code{\link{sim_covar}},
-  \code{\link{sim_discr}}
+Other multivariate normal functions: 
+\code{\link{sim_covar}()},
+\code{\link{sim_discr}()}
 }
 \concept{multivariate normal functions}

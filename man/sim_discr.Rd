@@ -36,7 +36,8 @@ sim_discr(n_vars = 5, var = 1, cov = 0.5, group_means = c(-1, 0, 1), name = "des
 \seealso{
 \code{\link{sim_cat}}, \code{\link{sim_covar}}
 
-Other multivariate normal functions: \code{\link{sim_cat}},
-  \code{\link{sim_covar}}
+Other multivariate normal functions: 
+\code{\link{sim_cat}()},
+\code{\link{sim_covar}()}
 }
 \concept{multivariate normal functions}
