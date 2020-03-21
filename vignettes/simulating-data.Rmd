@@ -25,8 +25,6 @@ To simulate co-varying multivariate normal data one can use the `mvrnorm()` func
 library(holodeck)
 library(dplyr)
 library(purrr)
-library(ropls)
-library(iheatmapr)
 library(mice)
 ```
 
@@ -106,10 +104,11 @@ df2
 `cov()` creates a covariance matrix with variance on the diagonal.  We can visualize it as a heatmap.
 
 ```{r fig.width=6, fig.height=5}
+library(ggplot2)
 df1 %>%
   select(-factor) %>% 
   cov() %>% 
-  iheatmap(row_labels = TRUE, col_labels = TRUE, name = "cov or var")
+  heatmap(Rowv = NA, Colv = NA, symm = TRUE)
 ```
 
 Values are higher for the discriminating variables because the `cov` and `var` arguments to `sim_discr()` only control the covariance and variance *within* groups.
@@ -175,34 +174,3 @@ head(dfs[[1]])
 head(dfs.missing[[1]])
 head(dfs.imputed[[1]])
 ```
-
-### Analyze
-
-PLS-DA can actually handle data with missing values as it does it's own imputation internally (however, it is quite slow).  We might still want to compare the results of data with and without missing values and with pre-imputed values.
-
-```{r}
-my_opls<- partial(opls, predI = 2, permI = 1, printL = FALSE, plotL = FALSE)
-plsda.q2 <- 
-  map_dbl(dfs,
-      ~my_opls(select(., -factor), .$factor) %>%
-        getSummaryDF() %>% .$`Q2(cum)`)
-
-missing.q2 <-
-  map_dbl(dfs.missing,
-      ~my_opls(select(., -factor), .$factor) %>%
-        getSummaryDF() %>% .$`Q2(cum)`)
-
-imputed.q2 <- 
-  map_dbl(dfs.imputed,
-      ~my_opls(select(., -factor), .$factor) %>%
-        getSummaryDF() %>% .$`Q2(cum)`)
-```
-
-```{r}
-tibble(plsda.q2, missing.q2, imputed.q2) %>% 
-  mutate(missing.q2.diff = plsda.q2 - missing.q2,
-         imputed.q2.diff = plsda.q2 - imputed.q2) %>% 
-  summarize_all(mean, na.rm = TRUE)
-```
-
-It looks like, on average in this sample, the imputation by `mice` did slightly worse than the imputation done by `ropls`, at least with respect to the $Q^2$ statistic.
