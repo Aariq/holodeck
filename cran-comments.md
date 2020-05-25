@@ -1,6 +1,6 @@
 ## Test Environments
 
-* local OS X install, R 3.6.1
+* local OS X install, R 4.0.0
 * travis CI build passing
 * appveyor build passing
 * R-hub passing
