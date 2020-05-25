@@ -5,7 +5,7 @@
 Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-ci.org/Aariq/holodeck)
 [![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck)
 [![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376)
-[![CRAN](https://www.r-pkg.org/badges/version/holodeck)](https://cran.r-project.org/web/packages/holodeck/index.html)
+[![CRAN](https://www.r-pkg.org/badges/version/holodeck)](https://CRAN.R-project.org/package=holodeck)
 ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/holodeck)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/Aariq/holodeck?branch=master&svg=true)](https://ci.appveyor.com/project/Aariq/holodeck)
@@ -123,12 +123,9 @@ df2
 ### PCA
 
 ``` r
-pca <- opls(select(df2, -factor), printL = FALSE, plotL = FALSE)
-#> Warning: 'printL' argument is deprecated; use 'info.txtC' instead
-#> Warning: 'plotL' argument is deprecated; use 'fig.pdfC' instead
+pca <- opls(select(df2, -factor), fig.pdfC = "none", info.txtC = "none")
   
 plot(pca, parAsColFcVn = df2$factor, typeVc = "x-score")
-#> Warning: Character 'parAsColFcVn' set to a factor
 ```
 
 <img src="man/figures/README-unnamed-chunk-4-1.png" width="100%" />
@@ -171,9 +168,7 @@ analysis.
 ### PLS-DA
 
 ``` r
-plsda <- opls(select(df2, -factor), df2$factor, printL = FALSE, plotL = FALSE, predI = 2)
-#> Warning: 'printL' argument is deprecated; use 'info.txtC' instead
-#> Warning: 'plotL' argument is deprecated; use 'fig.pdfC' instead
+plsda <- opls(select(df2, -factor), df2$factor, predI = 2, fig.pdfC = "none", info.txtC = "none")
 
 plot(plsda, typeVc = "x-score")
 ```

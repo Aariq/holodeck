@@ -7,7 +7,7 @@ Authors@R:
            role = c("aut", "cre"),
            email = "scottericr@gmail.com",
            comment =c(ORCID = "0000-0002-7430-7879"))
-Description: Provides pipe-friendly (%>%) functions to create simulated multivariate data sets
+Description: Provides pipe-friendly (%>%) wrapper functions for MASS::mvrnorm() to create simulated multivariate data sets
     with groups of variables with different degrees of variance, covariance, and effect size. 
 License: MIT + file LICENSE
 Encoding: UTF-8
