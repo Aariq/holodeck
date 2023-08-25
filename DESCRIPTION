@@ -1,6 +1,6 @@
 Package: holodeck
 Title: A Tidy Interface for Simulating Multivariate Data
-Version: 0.2.1
+Version: 0.2.1.9000
 Authors@R: 
     person(given = "Eric",
            family = "Scott",
@@ -11,7 +11,6 @@ Description: Provides pipe-friendly (%>%) wrapper functions for MASS::mvrnorm() 
     with groups of variables with different degrees of variance, covariance, and effect size. 
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
 biocViews:
 Imports: 
     dplyr,
@@ -20,7 +19,7 @@ Imports:
     purrr,
     rlang,
     assertthat
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.3
 URL: https://github.com/Aariq/holodeck
 BugReports: https://github.com/Aariq/holodeck/issues
 Suggests: 

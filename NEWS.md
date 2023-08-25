@@ -1,3 +1,7 @@
+# holodeck (development version)
+
+* Minor change to package-level documentation (nothing visible to users)
+
 # holodeck 0.2.1
 
 * Removed `iheatmapr` and `ropls` code from vignette (for now) because of compatibility issues with newer version of R.
