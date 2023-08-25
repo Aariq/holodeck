@@ -4,6 +4,11 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+<!-- badges: start -->
+[![R-CMD-check](https://github.com/Aariq/holodeck/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Aariq/holodeck/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck) [![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376) [![CRAN](https://www.r-pkg.org/badges/version/holodeck)]( https://CRAN.R-project.org/package=holodeck) ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/holodeck)
+<!-- badges: end -->
+
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -12,10 +17,11 @@ knitr::opts_chunk$set(
   out.width = "100%"
 )
 ```
-[![Build Status](https://travis-ci.org/Aariq/holodeck.svg?branch=master)](https://travis-ci.org/Aariq/holodeck) [![codecov](https://codecov.io/gh/Aariq/holodeck/branch/master/graph/badge.svg)](https://codecov.io/gh/Aariq/holodeck) [![DOI](https://zenodo.org/badge/167047376.svg)](https://zenodo.org/badge/latestdoi/167047376) [![CRAN](https://www.r-pkg.org/badges/version/holodeck)]( https://CRAN.R-project.org/package=holodeck) ![downloads](http://cranlogs.r-pkg.org/badges/grand-total/holodeck)  [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/Aariq/holodeck?branch=master&svg=true)](https://ci.appveyor.com/project/Aariq/holodeck)
 
 
-# holodeck 0.2.1: A Tidy Interface For Simulating Multivariate Data
+
+
+# holodeck: A Tidy Interface For Simulating Multivariate Data
 
 `holodeck` allows quick and simple creation of simulated multivariate data with variables that co-vary or discriminate between levels of a categorical variable.  The resulting simulated multivariate dataframes are useful for testing the performance of multivariate statistical techniques under different scenarios, power analysis, or just doing a sanity check when trying out a new multivariate method.
 
@@ -26,10 +32,9 @@ From CRAN:
 install.packages("holodeck)
 ```
 
-Development version:
+Development version from r-universe:
 ``` r
-# install.packages("remotes")
-remotes::install_github("Aariq/holodeck")
+install.packages('holodeck', repos = c('https://aariq.r-universe.dev', 'https://cloud.r-project.org'))
 ```
 
 ## Load packages
@@ -98,7 +103,7 @@ It looks like PCA mostly picks up on the variables with high covariance, **not**
 ### PLS-DA
 
 ```{r}
-plsda <- opls(select(df2, -factor), df2$factor, predI = 2, fig.pdfC = "none", info.txtC = "none")
+plsda <- opls(select(df2, -factor), df2$factor, predI = 2, permI = 10, fig.pdfC = "none", info.txtC = "none")
 
 plot(plsda, typeVc = "x-score")
 
