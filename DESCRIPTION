@@ -20,7 +20,7 @@ Imports:
     purrr,
     rlang,
     assertthat
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.3
 URL: https://github.com/Aariq/holodeck
 BugReports: https://github.com/Aariq/holodeck/issues
 Suggests: 
