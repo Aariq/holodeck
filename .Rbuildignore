@@ -10,3 +10,4 @@
 ^CRAN-RELEASE$
 ^appveyor\.yml$
 ^\.github$
+^CRAN-SUBMISSION$
