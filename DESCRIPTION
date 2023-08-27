@@ -1,6 +1,6 @@
 Package: holodeck
 Title: A Tidy Interface for Simulating Multivariate Data
-Version: 0.2.2
+Version: 0.2.2.9000
 Authors@R: 
     person(given = "Eric",
            family = "Scott",
